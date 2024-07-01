@@ -1,0 +1,1003 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptprvForm" language="groovy" pageWidth="595" pageHeight="842" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" uuid="7638eda2-78d0-4763-802b-d4b48629b442">
+	<property name="ireport.zoom" value="2.19615000000005"/>
+	<property name="ireport.x" value="36"/>
+	<property name="ireport.y" value="101"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DB2"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="TextAlignRight" hTextAlign="Right" hImageAlign="Right"/>
+	<parameter name="CompannyName" class="java.lang.String"/>
+	<parameter name="QueryMainString" class="java.lang.String">
+		<defaultValueExpression><![CDATA["select SUBSTR(h.cash_stdt,7,2) || '/'  || SUBSTR(h.cash_stdt,5,2)  ||  '/' || SUBSTR(h.cash_stdt,1,4)  as cash_stdt     ,h.cash_empy,cd.idsunm, h.cash_cano ,SUBSTR(cash_date,7,2) || '/'    || SUBSTR(cash_date,5,2)  || '/' || SUBSTR(h.cash_date,1,4) as cash_date     , h.cash_cost, h.cash_amt,sett_invc      ,SUBSTR(sett_invd,7,2) || '/' || SUBSTR(sett_invd,5,2)|| '/' || SUBSTR(sett_invd,1,4) as DateInvoice         ,sett_supp,sett_desc,sett_cost,sett_amtb,sett_vata,sett_amtt      ,CASE WHEN h.CASH_RETOBANK = 'SCB' then 'Return to ' ||  trim(CCTX15)      WHEN h.CASH_RETOBANK = 'KBANK' then 'Return to ' || trim(CCTX15)      WHEN h.CASH_RETOBANK = '' then 'No Return '      WHEN h.CASH_RETOBANK != '' THEN 'Claim back from  ' || trim(CCTX15) END as NameAmtPercash       ,eatx40 as CostCenterName,COALESCE(trim(IRYRE1),BA.FBA_NAME  || ' : ' ||BA.FBA_ACCNO) AS Payment,TRIM(CASH_RETOBANK) as CASH_RETOBANK      ,cg.IDSUNM as PYNO_BACK,DEC(h.CASH_WHTAX,15,2) AS CASH_WHTAX,h.CASH_PAYT,h.CASH_REF1,h.CASH_REF2,h.CASH_REF3,BA.FBA_NAME  || ' : ' ||BA.FBA_ACCNO AS BANK, CCTX15     from  BRLDTA0100.FIN_CASHADALL as h      LEFT JOIN M3FDBPRD.CMNDIV ON CCDIVI NOT IN  ('','120','130') AND CASH_CONO = CCCONO AND CASH_DIVI = CCDIVI     LEFT JOIN M3FDBPRD.CIDREF ON CASH_CONO = IRCONO AND IRSUNO = CASH_RETOBANK AND IRRFID = 'BANK' AND IRSUCM NOT IN ('','-')     LEFT JOIN M3FDBPRD.CIDMAS as cd ON  cash_empy= cd.idsuno   and cd.idcono = '10'     LEFT JOIN M3FDBPRD.CIDMAS AS cg on  CASH_PAYSUP = cg.idsuno   and cg.idcono = '10'     LEFT JOIN M3FDBPRD.FCHACC as ea ON  ea.eaaitp =  2  and   ea.eacono = cd.idcono    and ea.eaaitm=h.cash_cost AND  ea.eadivi='101'     LEFT JOIN BRLDTA0100.FIN_SETTADALL ON  cash_cano = sett_cano        LEFT JOIN BRLDTA0100.fin_bankall BA ON BA.FBA_CONO = h.CASH_CONO AND BA.FBA_DIVI = h.CASH_DIVI      where cash_cano = '1000018'      and cash_cono = '10'     and cash_divi = '101'     order by sett_invd "]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{QueryMainString}]]>
+	</queryString>
+	<field name="CASH_STDT" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_STDT"/>
+	</field>
+	<field name="CASH_EMPY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_EMPY"/>
+	</field>
+	<field name="IDSUNM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="IDSUNM"/>
+	</field>
+	<field name="CASH_CANO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_CANO"/>
+	</field>
+	<field name="CASH_DATE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_DATE"/>
+	</field>
+	<field name="CASH_COST" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_COST"/>
+	</field>
+	<field name="CASH_AMT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_AMT"/>
+	</field>
+	<field name="SETT_INVC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SETT_INVC"/>
+	</field>
+	<field name="DATEINVOICE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DATEINVOICE"/>
+	</field>
+	<field name="SETT_SUPP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SETT_SUPP"/>
+	</field>
+	<field name="SETT_DESC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SETT_DESC"/>
+	</field>
+	<field name="SETT_COST" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SETT_COST"/>
+	</field>
+	<field name="SETT_AMTB" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="SETT_AMTB"/>
+	</field>
+	<field name="SETT_VATA" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="SETT_VATA"/>
+	</field>
+	<field name="SETT_AMTT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="SETT_AMTT"/>
+	</field>
+	<field name="NAMEAMTPERCASH" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NAMEAMTPERCASH"/>
+	</field>
+	<field name="COSTCENTERNAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="COSTCENTERNAME"/>
+	</field>
+	<field name="PAYMENT" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PAYMENT"/>
+	</field>
+	<field name="CASH_RETOBANK" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_RETOBANK"/>
+	</field>
+	<field name="PYNO_BACK" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PYNO_BACK"/>
+	</field>
+	<field name="CASH_WHTAX" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_WHTAX"/>
+	</field>
+	<field name="CASH_PAYT" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_PAYT"/>
+	</field>
+	<field name="CASH_REF1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_REF1"/>
+	</field>
+	<field name="CASH_REF2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_REF2"/>
+	</field>
+	<field name="CASH_REF3" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CASH_REF3"/>
+	</field>
+	<field name="BANK" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="BANK"/>
+	</field>
+	<field name="CCTX15" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CCTX15"/>
+	</field>
+	<field name="TRANSFERDATE" class="java.lang.String"/>
+	<variable name="NetAmount" class="java.lang.Double" calculation="Count">
+		<variableExpression><![CDATA[$V{TotalAmount} ]]></variableExpression>
+	</variable>
+	<variable name="TotalAmount" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SETT_AMTT}]]></variableExpression>
+	</variable>
+	<variable name="Final_amt" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{CASH_AMT} - $V{NetAmount_01}]]></variableExpression>
+	</variable>
+	<variable name="Year" class="java.util.Date" calculation="First">
+		<initialValueExpression><![CDATA[new java.util.Date()]]></initialValueExpression>
+	</variable>
+	<variable name="NetAmount_01" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{TotalAmount} - $F{CASH_WHTAX}]]></variableExpression>
+	</variable>
+	<variable name="Final_amt_01" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{CASH_AMT} - $V{NetAmount_01}]]></variableExpression>
+	</variable>
+	<group name="eppano">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="456">
+				<staticText>
+					<reportElement x="343" y="23" width="142" height="17" forecolor="#333333" uuid="44914adc-37c4-47ac-992c-b4e26894be88"/>
+					<textElement>
+						<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Witholding tax]]></text>
+				</staticText>
+				<line>
+					<reportElement x="342" y="60" width="217" height="1" uuid="c9c5d31b-811a-4535-84c3-ef53a39be2e3"/>
+				</line>
+				<line>
+					<reportElement x="342" y="21" width="217" height="1" uuid="72cd1d78-224f-4ded-b7a8-341ffceffc29"/>
+				</line>
+				<line>
+					<reportElement x="342" y="41" width="216" height="1" uuid="a65dac34-7456-43ab-9a81-4caedb98a918"/>
+				</line>
+				<line>
+					<reportElement x="486" y="-2" width="1" height="63" uuid="fc1ab03d-c7c1-4b9f-a415-94d963ca825c"/>
+				</line>
+				<line>
+					<reportElement x="558" y="-3" width="1" height="63" uuid="7988014a-2d3d-49d0-a179-598d3ec59c0f"/>
+				</line>
+				<line>
+					<reportElement x="4" y="111" width="551" height="1" uuid="edb91e43-4bec-4d93-9511-5f6ea521b5f8"/>
+				</line>
+				<line>
+					<reportElement x="4" y="173" width="551" height="1" uuid="d7ec7a76-7d64-4284-a579-3183cc1da698"/>
+				</line>
+				<line>
+					<reportElement x="3" y="111" width="1" height="63" uuid="ceaeb30e-c65b-4102-8ef9-b94d114a36a7"/>
+				</line>
+				<line>
+					<reportElement x="554" y="111" width="1" height="62" uuid="14f3ee85-a890-4b10-b10b-b8195a8f6586"/>
+				</line>
+				<staticText>
+					<reportElement x="4" y="113" width="184" height="20" forecolor="#333333" uuid="a4ca2a95-8a55-45fe-bd99-3af1214033cd"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Prepared By]]></text>
+				</staticText>
+				<line>
+					<reportElement x="188" y="112" width="1" height="61" uuid="4b382052-2d11-442a-a4c2-8325ad3a9f5f"/>
+				</line>
+				<line>
+					<reportElement x="371" y="111" width="1" height="62" uuid="53eea558-71ed-4bc0-93fd-42d596c6a7c2"/>
+				</line>
+				<staticText>
+					<reportElement x="192" y="113" width="176" height="20" forecolor="#333333" uuid="5145bd03-4141-4351-87e1-6fc451869d2b"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Checked By]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="376" y="113" width="176" height="20" forecolor="#333333" uuid="c8fc3c28-9bc5-41c6-8445-d6ee535b9b6f"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Approved By COO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="133" width="184" height="18" forecolor="#333333" uuid="c0ca0770-ec07-4da4-bcbe-23c1eed9eb49"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[.............................................]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="151" width="184" height="23" forecolor="#333333" uuid="4b68eb9f-3e28-486b-97f4-d1dd2f886b86"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[........../........../...........]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="192" y="132" width="176" height="18" forecolor="#333333" uuid="740f20bc-3d26-40e0-ab4f-bfc03c278f2c"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[....................................]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="192" y="153" width="176" height="19" forecolor="#333333" uuid="8f1d0ca6-6b36-4878-bcd9-380b0da4085e"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[........./........../...........]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="377" y="130" width="175" height="18" forecolor="#333333" uuid="5e7fbd83-b673-4640-885f-c3139bd57e82"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[....................................]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="377" y="150" width="175" height="18" forecolor="#333333" uuid="c2038041-cb64-42b3-9b3e-26b773819fb8"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[........./........../............]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="180" width="263" height="18" forecolor="#333333" uuid="a3da7ee4-b6c7-47ec-84ff-743022a1e2de"/>
+					<textElement>
+						<font fontName="TH SarabunPSK" size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[* Settlement > Advance, requrired CFO's approval]]></text>
+				</staticText>
+				<line>
+					<reportElement x="394" y="290" width="1" height="39" uuid="0a21800d-4b90-4827-81e7-7b19d4e1bb35"/>
+				</line>
+				<line>
+					<reportElement x="1" y="289" width="556" height="1" uuid="4b78e347-526c-4c06-811c-30d2226c87bb"/>
+				</line>
+				<staticText>
+					<reportElement x="262" y="222" width="99" height="20" forecolor="#333333" uuid="dddf2b2b-cf8a-4f5b-b770-56bf76999d40"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Debit]]></text>
+				</staticText>
+				<line>
+					<reportElement x="557" y="221" width="1" height="109" uuid="4a40a7e7-81ba-4fea-a808-b8519744a4e7"/>
+				</line>
+				<line>
+					<reportElement x="56" y="221" width="1" height="69" uuid="71fda15c-f5c9-46f0-9799-35505717532a"/>
+				</line>
+				<line>
+					<reportElement x="191" y="290" width="1" height="40" uuid="f3ab6f87-a5aa-4eac-b592-ccd3242bc6b0"/>
+				</line>
+				<staticText>
+					<reportElement x="367" y="223" width="99" height="20" forecolor="#333333" uuid="689ce553-e97c-41f2-9dbc-b10b056c4c3e"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Credit]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="43" y="290" width="86" height="25" forecolor="#333333" uuid="54f28d18-a79f-457c-a8cc-5fb088c0d68e"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Checked By]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="402" y="291" width="152" height="25" forecolor="#333333" uuid="d700c444-cd11-41ad-bbf2-b10ed4c2a290"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Approved By]]></text>
+				</staticText>
+				<line>
+					<reportElement x="1" y="249" width="556" height="1" uuid="774984e3-26dd-4014-a5d2-0d4920d1d327"/>
+				</line>
+				<staticText>
+					<reportElement x="1" y="199" width="188" height="20" forecolor="#333333" uuid="c25cf835-6332-47e4-a43b-b4694dd38227"/>
+					<textElement>
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[For Costing DepartMent]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="111" y="222" width="150" height="20" forecolor="#333333" uuid="ea4ceb50-5ed9-432c-b2f1-72ac936601e9"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[A/C Name.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="113" y="221" width="1" height="69" uuid="2247afb8-01b7-437d-bf91-0dbc6e239cb7"/>
+				</line>
+				<line>
+					<reportElement x="466" y="220" width="1" height="69" uuid="d5f478aa-222b-4a0a-bdf3-c4543a5db8dc"/>
+				</line>
+				<staticText>
+					<reportElement x="57" y="223" width="54" height="20" forecolor="#333333" uuid="be733673-9c00-459b-969c-ebaa7ec245b7"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[A/C No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="245" y="291" width="86" height="25" forecolor="#333333" uuid="f9a2047e-f05a-43c5-98f5-d23aa6827583"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Verify By]]></text>
+				</staticText>
+				<line>
+					<reportElement x="1" y="220" width="557" height="1" uuid="7ce0ad97-b2ae-40ff-ba76-d5d33f3909a3"/>
+				</line>
+				<staticText>
+					<reportElement x="466" y="223" width="89" height="20" forecolor="#333333" uuid="c40e293d-a94c-462e-b474-83eacd66532e"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Remark]]></text>
+				</staticText>
+				<line>
+					<reportElement x="1" y="274" width="556" height="1" uuid="a0956e05-b8b0-4f2b-b269-d6c62cf863a0"/>
+				</line>
+				<line>
+					<reportElement x="2" y="261" width="555" height="1" uuid="11b3d3c7-8d1c-43f1-ad32-70557d913a21"/>
+				</line>
+				<line>
+					<reportElement x="1" y="221" width="1" height="109" uuid="58d18526-bf79-4c66-bdc3-ac83d4a4c6a0"/>
+				</line>
+				<staticText>
+					<reportElement x="1" y="223" width="54" height="20" forecolor="#333333" uuid="2c8ddbb9-be06-47be-98e7-876a61176bc1"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[C.Center]]></text>
+				</staticText>
+				<line>
+					<reportElement x="265" y="220" width="1" height="69" uuid="aad61ade-fde0-4a93-b937-1ff19b4d01ac"/>
+				</line>
+				<line>
+					<reportElement x="364" y="221" width="1" height="69" uuid="e9bae9b2-4b84-4984-820d-86c225b56144"/>
+				</line>
+				<line>
+					<reportElement x="1" y="329" width="556" height="1" uuid="8ff7f58d-b89b-4237-a811-53feb9470242"/>
+				</line>
+				<staticText>
+					<reportElement x="2" y="330" width="188" height="20" forecolor="#333333" uuid="f5d85040-9041-417c-90f6-5a0ae55ad99d"/>
+					<textElement>
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[For Account DepartMent]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement x="488" y="23" width="67" height="16" uuid="b66cd7b0-9f19-4f14-b3fd-e675bc5a9a5f"/>
+					<textElement textAlignment="Right">
+						<font fontName="TH SarabunPSK" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CASH_WHTAX}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="343" y="3" width="142" height="15" forecolor="#333333" uuid="b05adf9f-363d-439e-9e6c-6cda9b28c497"/>
+					<textElement textAlignment="Justified">
+						<font fontName="TH SarabunPSK" size="12" isBold="true" isStrikeThrough="false"/>
+					</textElement>
+					<text><![CDATA[Total Amount]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="365" y="352" width="102" height="20" forecolor="#333333" uuid="dc153947-dd9b-4a34-bc81-0a4ec79fe79f"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Credit]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="415" width="558" height="2" uuid="fa06afa5-71fe-4c56-ac92-14bd60162469"/>
+				</line>
+				<staticText>
+					<reportElement x="402" y="420" width="152" height="25" forecolor="#333333" uuid="0ecac5af-d3a0-4fbb-831d-0a4df6272aa4"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Voucher No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="43" y="419" width="86" height="25" forecolor="#333333" uuid="663ed57c-33fa-4c7a-9022-5ebc77a2d641"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Checked By]]></text>
+				</staticText>
+				<line>
+					<reportElement x="394" y="418" width="1" height="37" uuid="00a3fbfa-2e39-4b88-90b1-54d5b3974731"/>
+				</line>
+				<staticText>
+					<reportElement x="245" y="420" width="86" height="25" forecolor="#333333" uuid="28ff6a5e-7f15-4227-a6d8-01a0382d359b"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Verify By]]></text>
+				</staticText>
+				<line>
+					<reportElement x="466" y="349" width="1" height="68" uuid="29a3cde9-2e35-47fb-adc6-e7228bd5d704"/>
+				</line>
+				<staticText>
+					<reportElement x="58" y="352" width="54" height="20" forecolor="#333333" uuid="703d5ef9-6682-4742-9e76-9f2f9251453a"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[A/C No.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="402" width="558" height="1" uuid="8b485cfe-12a1-4370-b696-b48d0fc945bc"/>
+				</line>
+				<staticText>
+					<reportElement x="2" y="352" width="54" height="20" forecolor="#333333" uuid="a766f04d-e1d6-465b-9b90-78bb790a9f92"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[C.Center]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="349" width="559" height="1" uuid="6a14e033-60f9-4032-850c-a6e2ad9f7b92"/>
+				</line>
+				<staticText>
+					<reportElement x="112" y="351" width="150" height="20" forecolor="#333333" uuid="222d90fb-a47c-428c-b2b6-7dd40b4babd5"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[A/C Name.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="1" y="455" width="558" height="1" uuid="092811f6-3215-46e1-92a4-6ed36b2c741e"/>
+				</line>
+				<line>
+					<reportElement x="0" y="350" width="1" height="106" uuid="81142f7e-db9f-4363-b31e-1bd838de2b7b"/>
+				</line>
+				<line>
+					<reportElement x="1" y="387" width="557" height="1" uuid="1290287b-d4d7-4738-8b8a-229078dec712"/>
+				</line>
+				<staticText>
+					<reportElement x="266" y="351" width="96" height="20" forecolor="#333333" uuid="f9b33182-f0a6-47e4-b5bf-72f2a2db9a07"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Debit]]></text>
+				</staticText>
+				<line>
+					<reportElement x="191" y="418" width="1" height="37" uuid="050768c7-c247-4861-bb62-893934821521"/>
+				</line>
+				<staticText>
+					<reportElement x="469" y="352" width="89" height="20" forecolor="#333333" uuid="76da7f35-decf-49ad-9d5b-d7779496fe82"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Remark]]></text>
+				</staticText>
+				<line>
+					<reportElement x="113" y="350" width="1" height="65" uuid="75562aea-8cd8-43f7-a87a-243bd6022c2a"/>
+				</line>
+				<line>
+					<reportElement x="265" y="349" width="1" height="66" uuid="6eb314a3-d914-44e6-b66d-8a2d3fdb5305"/>
+				</line>
+				<line>
+					<reportElement x="559" y="349" width="1" height="107" uuid="a41a2db3-c903-40d8-8c8a-fef1666b76cd"/>
+				</line>
+				<line>
+					<reportElement x="56" y="350" width="1" height="65" uuid="92926d9d-629d-4285-8aec-598966f1dcc4"/>
+				</line>
+				<line>
+					<reportElement x="364" y="350" width="1" height="67" uuid="bdc96748-37bb-4374-b393-51f1e68daf8f"/>
+				</line>
+				<line>
+					<reportElement x="0" y="373" width="558" height="1" uuid="66f87407-98ac-4d37-99ea-02171e07eaeb"/>
+				</line>
+				<line>
+					<reportElement x="341" y="0" width="1" height="61" uuid="b351dd7e-43cc-45ed-9001-a83c21c968b3"/>
+				</line>
+				<staticText>
+					<reportElement x="342" y="61" width="144" height="20" forecolor="#333333" uuid="a85bc2e7-60ce-4841-90e9-b74b730f6537"/>
+					<textElement>
+						<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Advance Amount]]></text>
+				</staticText>
+				<line>
+					<reportElement x="342" y="100" width="217" height="1" uuid="5f8b40ea-5754-420a-a31a-01bcb47e9ea2"/>
+				</line>
+				<line>
+					<reportElement x="342" y="81" width="216" height="1" uuid="47e2056c-18b6-49b4-952b-a3106e22c0ed"/>
+				</line>
+				<line>
+					<reportElement x="486" y="38" width="1" height="63" uuid="b3ff68a2-2fa8-4587-a916-8236785c1583"/>
+				</line>
+				<line>
+					<reportElement x="558" y="37" width="1" height="63" uuid="bc137516-5458-4a2c-a66b-c82fba6e6aea"/>
+				</line>
+				<textField>
+					<reportElement x="343" y="82" width="143" height="17" forecolor="#000000" uuid="c9500f78-9b22-4b4d-bb1c-4bb337be0a0a"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{NAMEAMTPERCASH}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement style="TextAlignRight" x="488" y="63" width="67" height="16" uuid="775a77ab-3078-4d5a-86b7-dc152614110f"/>
+					<textElement textAlignment="Right" markup="none">
+						<font fontName="TH SarabunPSK" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CASH_AMT}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="341" y="40" width="1" height="61" uuid="b4fb0983-33e6-4d0b-a1ec-8d7bda4590f3"/>
+				</line>
+				<staticText>
+					<reportElement x="343" y="44" width="143" height="17" forecolor="#333333" uuid="54f3dec0-1305-4451-8f0d-579e5cd03acb"/>
+					<textElement>
+						<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Net Amount]]></text>
+				</staticText>
+				<textField pattern="#,##0.00#">
+					<reportElement x="488" y="0" width="67" height="21" uuid="a9c5a9d3-806f-4784-9b52-42f655816739"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TotalAmount}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#">
+					<reportElement x="488" y="42" width="67" height="18" uuid="5588a4b2-f4e0-4fda-8d3d-8f31211ceac7"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{NetAmount_01}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#">
+					<reportElement style="TextAlignRight" x="488" y="82" width="67" height="17" uuid="bb761cc9-4e15-4d41-99bd-164e046a873f"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" markup="styled">
+						<font fontName="TH SarabunPSK" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Final_amt_01}.doubleValue() < 0  ? $V{Final_amt_01}.doubleValue() *(-1):$V{Final_amt_01}.doubleValue()]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="471" y="-491" width="100" height="30" uuid="ccd7be2b-85ce-4805-8ad9-8edb6bcb13cc"/>
+					<textFieldExpression><![CDATA[$F{TRANSFERDATE}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="434" y="82" width="51" height="18" forecolor="#FF0400" uuid="0d0d44da-66e0-475a-a03b-7620f2c19914"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{TRANSFERDATE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="47" splitType="Stretch">
+			<textField>
+				<reportElement x="143" y="3" width="273" height="27" forecolor="#990000" uuid="e5fb53cf-e554-44a6-a67d-cf5aacdbe3ee"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CompannyName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="499" y="3" width="59" height="20" forecolor="#333333" uuid="d83226f0-d37c-4800-98c7-ae3c47f408d2"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FO-FIN-006]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="203" splitType="Stretch">
+			<staticText>
+				<reportElement x="143" y="8" width="273" height="20" forecolor="#990000" uuid="cb0da2fa-c4b0-4ad2-97b0-0a3026436e27"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Settlement Of Cash Advance (M3)]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="4" width="557" height="1" uuid="30f44429-0fb3-48d9-a27d-35a738cf25ed"/>
+			</line>
+			<line>
+				<reportElement x="2" y="29" width="557" height="1" uuid="ab99dea9-0bd4-4bd4-8c9c-8efd56f5e383"/>
+			</line>
+			<line>
+				<reportElement x="558" y="5" width="1" height="175" uuid="c3186e5f-701a-4630-85c1-4e4c4da2230a"/>
+			</line>
+			<line>
+				<reportElement x="2" y="4" width="1" height="176" uuid="41f973dd-b55c-4100-8909-5e48b111de97"/>
+			</line>
+			<staticText>
+				<reportElement x="4" y="35" width="60" height="20" forecolor="#333333" uuid="c57da44b-a1a2-4e2e-a99a-74b863af8af1"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Staff Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="75" width="60" height="20" forecolor="#333333" uuid="4c24f003-280a-4f53-84b0-ddc8a9c86329"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Department]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="375" y="55" width="93" height="20" forecolor="#333333" uuid="2d9efcf0-4826-4a65-9407-bde77c18472a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Advance No. :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="375" y="75" width="93" height="20" forecolor="#333333" uuid="73b3ef0b-b81b-4b6c-9999-ed42eb12960b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Advance Date :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="375" y="35" width="93" height="20" forecolor="#333333" uuid="b0cea561-b49a-4f99-aacd-4a0c070e0ea0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Settlement Date :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="169" y="99" width="38" height="20" forecolor="#333333" uuid="c20d1013-e423-460d-be6b-aa5395c5e609"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paid By]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="223" y="99" width="100" height="20" forecolor="#333333" uuid="5b25a9ff-d85d-4ba2-b2ba-d32a8bedb3c4"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Petty Cash]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="207" y="123" width="11" height="11" uuid="037982bf-66a7-40b9-affa-9fbe1e2e2a22"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="207" y="104" width="11" height="11" uuid="c9bce869-d049-4ff8-827b-8644389ef620"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="463" y="101" width="11" height="11" uuid="11182ec4-f649-44b7-ae4d-dcf93c1b5753"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="478" y="112" width="75" height="21" forecolor="#333333" uuid="7aa61f23-a4e3-4f88-a6dc-f1a4ad5c7548">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Non Stock Item]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="478" y="93" width="75" height="21" forecolor="#333333" uuid="61a48869-8759-47fc-b2e7-c709841a482c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stock Item]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="478" y="130" width="75" height="21" forecolor="#333333" uuid="7859c429-3721-481b-950f-507ddf372715">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Service Other]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="463" y="138" width="11" height="11" uuid="490e1a8f-8852-4b6e-aefc-b6d1bad56248"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="463" y="120" width="11" height="11" uuid="6b8574b5-a23e-48e4-bf68-425d0a144cfd"/>
+			</rectangle>
+			<line>
+				<reportElement x="3" y="179" width="555" height="1" uuid="d66cce52-82ff-49d8-acd8-b7510b6b3974"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="181" width="58" height="21" forecolor="#333333" uuid="7d1ce2d5-2407-4af9-a422-f17cdfed61e8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="TH SarabunPSK" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="182" width="60" height="20" forecolor="#333333" uuid="c45139e4-d6e4-4b73-9ad1-a0989df78a42"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Inv.Date.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="121" y="182" width="61" height="20" forecolor="#333333" uuid="a4ac7b22-69bd-402f-b54e-50b8302b1ad8"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Supplier]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="182" y="182" width="158" height="20" forecolor="#333333" uuid="e97e47c5-1446-435c-b962-d0773d3afe18"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="181" width="36" height="20" forecolor="#333333" uuid="c6be2ad8-271a-471f-a64c-4fd4dbde3e58"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cost]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="181" width="59" height="20" forecolor="#333333" uuid="2662e819-7817-454a-9ff6-e2b4a649753a"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="436" y="181" width="50" height="21" forecolor="#333333" uuid="a70f673d-092d-44a6-b02e-99fce20f20bb"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vat Amt]]></text>
+			</staticText>
+			<line>
+				<reportElement x="3" y="201" width="556" height="1" uuid="1936c927-7f34-469b-92e7-71a49501b289"/>
+			</line>
+			<staticText>
+				<reportElement x="486" y="181" width="72" height="20" forecolor="#333333" uuid="7ccefe26-5cca-4536-a973-1a3dde6af01f"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Amount]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="177" width="1" height="25" uuid="7b8fbed8-c1d6-4063-a6f2-57aab54c7961"/>
+			</line>
+			<line>
+				<reportElement x="59" y="179" width="1" height="24" uuid="b667e60d-c9b4-48cb-82d5-72a72e49a292"/>
+			</line>
+			<line>
+				<reportElement x="121" y="179" width="1" height="23" uuid="a307abb4-64e4-4899-b2eb-2ca848aa3d63"/>
+			</line>
+			<line>
+				<reportElement x="182" y="179" width="1" height="24" uuid="e42f55a8-7548-4f0b-8b8d-985b65e1613c"/>
+			</line>
+			<line>
+				<reportElement x="341" y="179" width="1" height="24" uuid="d608e91e-2ae0-4c83-9e8e-8a0b513c7415"/>
+			</line>
+			<line>
+				<reportElement x="376" y="179" width="1" height="24" uuid="7820ec62-1429-4c37-b4da-2ab9b114bd74"/>
+			</line>
+			<line>
+				<reportElement x="435" y="179" width="1" height="24" uuid="6a308a47-572c-4501-9acd-ef2e4846eda2"/>
+			</line>
+			<line>
+				<reportElement x="486" y="180" width="1" height="23" uuid="8b90dbdb-e620-4b43-ae95-d1f158bcfb2e"/>
+			</line>
+			<line>
+				<reportElement x="558" y="178" width="1" height="25" uuid="5c4575d4-64b9-4170-a755-d3c1e20f731f"/>
+			</line>
+			<textField>
+				<reportElement x="477" y="35" width="75" height="20" uuid="fbf8ad0c-20b1-4947-91b8-c4403542f4c2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_STDT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="499" y="55" width="53" height="20" uuid="7058279a-1164-47cb-a339-6a7b918273e3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["-"+$F{CASH_CANO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="477" y="75" width="76" height="20" uuid="3af15e5c-da16-4bcc-b598-86d3083b611d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="64" y="35" width="63" height="20" uuid="c3f39048-a0df-4f24-a02f-01fc3d4afc87"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_EMPY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="35" width="245" height="40" uuid="ff9c281f-121b-49ad-a360-3323c4cf9c85"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IDSUNM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="63" y="75" width="63" height="20" uuid="a5504e25-122c-4082-999d-9ef478785b76"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_COST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="75" width="235" height="20" uuid="c26035f0-762e-4c2e-bc0e-62f8dfeb7813"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COSTCENTERNAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="99" width="162" height="56" uuid="60fe0405-5645-4c0b-a15e-e7f2eff7927b"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMEAMTPERCASH}]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement x="207" y="99" width="16" height="16" uuid="c5dfa4ad-41b8-4250-a127-54462d0a944a">
+					<printWhenExpression><![CDATA[($F{CASH_RETOBANK} == "Petty Cash" ? true : false )]]></printWhenExpression>
+				</reportElement>
+			</line>
+			<line direction="BottomUp">
+				<reportElement x="207" y="118" width="16" height="16" uuid="2dce3576-bc89-4798-a724-bd0e175d76c2">
+					<printWhenExpression><![CDATA[($F{CASH_RETOBANK} == "Petty Cash" ? false : $F{CASH_RETOBANK}.equalsIgnoreCase("SCB") || $F{CASH_RETOBANK}.length() > 5  ? true:false)]]></printWhenExpression>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="223" y="138" width="237" height="18" uuid="6c990e90-2d79-45bd-ad74-7e57c27361ea">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{PAYMENT}.length() > 0 ? true:false]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font fontName="TH SarabunPSK" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_PAYT}.equalsIgnoreCase( "TRANSFER" ) ?$F{PAYMENT} : ""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="156" width="56" height="21" uuid="f98e2ec6-9596-4236-b510-47017943c2fd"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Capex No :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="163" y="156" width="39" height="21" uuid="7af66949-50bc-4166-b0b7-9853c24d2e0d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PO No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="223" y="119" width="237" height="19" uuid="da63c6c1-fb5d-4c2f-b5d6-9701e71d0d9e"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{CASH_PAYT}.equalsIgnoreCase( "TRANSFER" ) && $F{CASH_RETOBANK}.length() > 3 ) ? "Bank Transfer to " + $F{PYNO_BACK} : ($F{CASH_PAYT}.equalsIgnoreCase( "TRANSFER" ) )? "Bank Transfer to " + $F{CCTX15}  : "Cheque ............................................."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="156" width="98" height="21" uuid="ffba9360-c494-430b-a31a-93a7f754612a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_REF1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="203" y="156" width="98" height="21" uuid="8a5adde5-b2b8-495f-ac81-fbdc8529742e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_REF3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy">
+				<reportElement x="477" y="55" width="22" height="20" uuid="0a229352-ddab-4226-aca2-a570f1bcc548"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Year}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<line>
+				<reportElement x="2" y="20" width="556" height="1" uuid="811676c1-b4d3-4e42-9af7-4c66ca6d43c6"/>
+			</line>
+			<line>
+				<reportElement x="2" y="-1" width="1" height="21" uuid="8b901072-37f3-45f1-aef8-3ed3f4bc95dc"/>
+			</line>
+			<line>
+				<reportElement x="59" y="0" width="1" height="20" uuid="d6f19c8d-12b6-4b1d-8dff-6b4e7e3fdb21"/>
+			</line>
+			<line>
+				<reportElement x="121" y="-1" width="1" height="21" uuid="bb7d435a-168c-4c70-8d3c-6896178eafa5"/>
+			</line>
+			<line>
+				<reportElement x="182" y="0" width="1" height="20" uuid="05d0eca9-d8a3-44fc-98a3-1794a4903279"/>
+			</line>
+			<line>
+				<reportElement x="341" y="-1" width="1" height="21" uuid="6d0d780a-f89c-4823-a2eb-b8346f8cf10b"/>
+			</line>
+			<line>
+				<reportElement x="376" y="0" width="1" height="20" uuid="efaba845-25dd-4800-8e9a-44ef9c99d21b"/>
+			</line>
+			<line>
+				<reportElement x="435" y="0" width="1" height="20" uuid="c3d42eca-8885-4782-ae98-6732d9d5cf9c"/>
+			</line>
+			<line>
+				<reportElement x="486" y="0" width="1" height="20" uuid="865919e4-c2a6-4405-965f-f3591437145b"/>
+			</line>
+			<line>
+				<reportElement x="558" y="0" width="1" height="20" uuid="f9769c51-5533-4c52-b0e7-e73259bd8c29"/>
+			</line>
+			<textField>
+				<reportElement x="342" y="0" width="34" height="19" uuid="5f744d84-d698-4a83-b0ce-559e6b329738"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SETT_COST}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="377" y="-1" width="57" height="21" uuid="1d882a33-31e1-45ef-bed1-944dde45bc92"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SETT_AMTB}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="436" y="-1" width="49" height="21" uuid="64b3d1e2-3088-45e8-9cbc-ae449be7d108"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SETT_VATA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="488" y="0" width="67" height="20" uuid="91e5fa55-a59d-4187-956e-ca810254ef31"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SETT_AMTT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="0" width="56" height="20" uuid="08772072-3790-403c-bce7-71875e44c68e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SETT_INVC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="0" width="60" height="20" uuid="f522e130-caed-4cda-bf85-8d3e299465f2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DATEINVOICE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="122" y="0" width="60" height="20" uuid="5be55911-9c23-4f36-aed9-3b23fd870aba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SETT_SUPP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="183" y="0" width="157" height="20" uuid="777ef35c-16f1-4cb6-b1a6-6de6d1a9d82f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SETT_DESC}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
