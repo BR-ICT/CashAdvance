@@ -1,3 +1,0 @@
-cashadvance_multicompany.AutoCompleteTextField
-cashadvance_multicompany.AutoCompleteComboBox
-cashadvance_multicompany.AutoCompleteComboBoxEditor
