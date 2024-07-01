@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cashadvanceAccountingVoucher" language="groovy" pageWidth="1008" pageHeight="595" orientation="Landscape" columnWidth="972" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" uuid="de58401a-5e9a-4a03-89ff-52ed34e1180c">
+	<property name="ireport.zoom" value="1.9487171000000267"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<parameter name="CompannyName" class="java.lang.String"/>
+	<parameter name="ReceiveDateAt" class="java.lang.String">
+		<defaultValueExpression><![CDATA["20201208"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cono" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="divi" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT a.*,b.eatx40
+	FROM (
+	select cash_empy,cash_pps1,SUBSTR(cash_reda,7,2) CONCAT '/'CONCAT SUBSTR(cash_reda,5,2) CONCAT '/' CONCAT SUBSTR(cash_reda,1,4) as cash_reda
+  	,SUBSTR(cash_dued,7,2) CONCAT '/' CONCAT SUBSTR(cash_dued,5,2) CONCAT '/'  CONCAT SUBSTR(cash_dued,1,4) as cash_dued
+  	,SUBSTR(cash_stdp,7,2) CONCAT '/' CONCAT SUBSTR(cash_stdp,5,2) CONCAT '/'  CONCAT SUBSTR(cash_stdp,1,4) as cash_stdp
+  	,cash_amt  ,SUBSTR(cash_date,7,2) CONCAT '/'CONCAT SUBSTR(cash_date,5,2) CONCAT '/'  CONCAT SUBSTR(cash_date,1,4) as cash_date
+ 	,idsunm,cash_cano,CASH_COST
+ 	,DAYS (date(SUBSTR(cash_stdp,1,4) CONCAT '-' CONCAT SUBSTR(cash_stdp,5,2) CONCAT '-' CONCAT SUBSTR(cash_stdp,7,2)))-days
+	(date(SUBSTR($P!{ReceiveDateAt},1,4) CONCAT '-' CONCAT SUBSTR($P!{ReceiveDateAt},5,2) CONCAT '-' CONCAT SUBSTR($P!{ReceiveDateAt},7,2))) as overdate
+ 	,SUBSTR(VARCHAR(current date),1,3)CONCAT SUBSTR(VARCHAR(current date),4,2) CONCAT '/'CONCAT SUBSTR(VARCHAR(current date),7,2) as sysdate
+ 	from  BRLDTA0100.FIN_CASHADALL, M3FDBPRD.CIDMAS, sysibm.sysdummy1
+ 	LEFT JOIN ( SELECT current date as sysdate FROM sysibm.sysdummy1 ) as d ON 1=1
+ 	WHERE CASH_CONO = $P{cono}
+ 	AND CASH_DIVI = $P{divi}
+ 	AND  cash_empy = idsuno
+ 	and idcono =  $P{cono}
+ 	and CASH_TRAD <= $P{ReceiveDateAt}
+ 	and (cash_stat = '30' or cash_stat = '40' or  cash_stat = '50' OR  (cash_stat = '60' AND CASH_STDA >  $P{ReceiveDateAt}))
+	order by CASH_EMPY,CASH_DATE,CASH_CANO
+	) A LEFT JOIN (
+ 	SELECT  eaaitm,eatx40
+ 	FROM  M3FDBPRD.FCHACC
+	WHERE eaaitp =  2
+	AND eacono = $P{cono}
+	and   eadivi = $P{divi}
+	) B  ON B.eaaitm = A.cash_cost
+	ORDER BY CASH_CANO asc]]>
+	</queryString>
+	<field name="CASH_EMPY" class="java.lang.String"/>
+	<field name="CASH_PPS1" class="java.lang.String"/>
+	<field name="CASH_REDA" class="java.lang.String"/>
+	<field name="CASH_DUED" class="java.lang.String"/>
+	<field name="CASH_STDP" class="java.lang.String"/>
+	<field name="CASH_AMT" class="java.math.BigDecimal"/>
+	<field name="CASH_DATE" class="java.lang.String"/>
+	<field name="IDSUNM" class="java.lang.String"/>
+	<field name="CASH_CANO" class="java.math.BigDecimal"/>
+	<field name="CASH_COST" class="java.lang.String"/>
+	<field name="OVERDATE" class="java.lang.Integer"/>
+	<field name="SYSDATE" class="java.lang.String"/>
+	<field name="EATX40" class="java.lang.String"/>
+	<variable name="PageTotal" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
+	<variable name="DateNow" class="java.lang.String"/>
+	<variable name="TotalCashAmt" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{CASH_AMT}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="190" height="20" uuid="25377312-af91-4150-b586-0fdaee7114b7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cash advance OutStanding report as at : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="0" width="297" height="20" forecolor="#CC0000" uuid="5b5da1a7-0566-40f4-9c6d-2433b2624960"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CompannyName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="20" width="107" height="20" uuid="29b6b6d2-b967-42cb-9013-731517ba3266"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="82" height="22" uuid="28abfd2c-1369-4fdb-8238-58bba13720e4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Staff Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="0" width="108" height="22" uuid="83e2700d-78a1-4d5f-8858-b1ded1f39c57"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="0" width="156" height="22" uuid="855610bc-041d-4e1e-a026-b67d3f86d5d8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="453" y="0" width="49" height="22" uuid="5612ef5f-61ab-48ba-98f9-23fa168a90fc"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Adv No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="568" y="0" width="54" height="22" uuid="24408574-c0ef-46ed-bf50-aebdf7e03c5a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Chq Date.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="677" y="0" width="52" height="22" uuid="e97bbbcf-d1c8-4bdf-9c28-fbd985f56099"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Plan Set.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="847" y="0" width="69" height="22" uuid="72f56efe-0675-488a-b014-e75cd3628f22"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="729" y="0" width="79" height="22" uuid="83bbffb6-12d1-4fd6-8f6e-599b62e7e0ee"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OVERDUE_NOT OVER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="622" y="0" width="55" height="22" uuid="be8995f3-f768-4a50-9339-61f9845e69bd"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rec Date.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="0" width="107" height="22" uuid="51f64639-fb02-414b-afc4-7df17ae41ac8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Department]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="502" y="0" width="66" height="22" uuid="fc6d2752-0b7c-4da7-85ea-e407f2abcf73"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Req Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="808" y="0" width="39" height="22" uuid="3dd398d4-7d97-4bf3-9d13-1e5d91980b98"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="82" height="16" uuid="145c4b67-1672-4b1b-90c3-fbcda8642ead"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_EMPY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="82" y="0" width="108" height="16" uuid="a3bd66dd-a85e-462d-bab7-0596320c470c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IDSUNM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="297" y="0" width="156" height="16" uuid="c465fb68-2460-4cbd-b71b-08f68b67f017"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_PPS1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="453" y="0" width="49" height="16" uuid="e8897e66-d0de-4024-9168-d272e6305030"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_CANO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="568" y="0" width="54" height="16" uuid="cfe83758-adf7-4004-bae4-08fdce427ec6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_DUED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="677" y="0" width="52" height="16" uuid="ec41fa00-4572-496a-9d66-7cb16898f225"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_STDP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="847" y="0" width="69" height="16" uuid="524cea33-0c03-4c36-b419-1c542158ecbd"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="808" y="0" width="39" height="16" uuid="c9f5389a-97be-4975-80f3-fa23ec13b23c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OVERDATE}.toString().replace("-","")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="622" y="0" width="55" height="16" uuid="bb5437eb-6a8a-4aba-a770-8ece09ce4190"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_REDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="0" width="30" height="16" uuid="a32b074c-59b1-482a-9199-1f9e2469f063"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_COST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="77" height="16" uuid="ae0ee570-36a3-4108-8bad-ab7c0d6fe70f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EATX40}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="502" y="0" width="66" height="16" uuid="80fec564-a853-4c08-83a3-e2c43cce9b87"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_DATE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="729" y="0" width="79" height="16" uuid="e7c1d06f-5d34-4d01-b6f8-f73fecabfa68"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{OVERDATE} < 0 ? "Overdue" : "Not Overdue")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="17" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="82" height="17" uuid="3e9a5c2c-9c05-44cb-a76b-3a44507a3a8a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="808" y="0" width="108" height="17" uuid="a0424719-a25f-465b-9c5b-5040ce28cbae"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalCashAmt}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
