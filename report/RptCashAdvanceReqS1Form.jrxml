@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptprvForm" language="groovy" pageWidth="595" pageHeight="842" columnWidth="561" leftMargin="17" rightMargin="17" topMargin="17" bottomMargin="17" uuid="7638eda2-78d0-4763-802b-d4b48629b442">
 	<property name="ireport.zoom" value="1.6105100000000039"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="M3"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DB2"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -25,37 +26,33 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT A.*,B.IRYRE1,CASE WHEN  COALESCE(idsunm,'-') = '-' THEN PayName ELSE idsunm END    AS PAYSUP
-  FROM (
-  SELECT  CASE WHEN h.CASH_WHTYPE = '0' then 'ไม่หักภาษี ณ ที่จ่าย' WHEN h.CASH_WHTYPE = '1' THEN 'หักหน้าเช็ค' ELSE 'หักหน้างาน' END  as CASH_WHTYPE,h.CASH_CANO,SUBSTR(h.CASH_DATE,7,2) CONCAT '/' CONCAT SUBSTR(h.CASH_DATE,5,2)  CONCAT '/' CONCAT SUBSTR(h.CASH_DATE,1,4)as CASH_DATE,
+		<![CDATA[SELECT A.*,B.IRYRE1,CASE WHEN  COALESCE(SASUNM,'-') = '-' THEN PayName ELSE B.SASUNM END    AS PAYSUP
+  FROM (      SELECT  CASE WHEN h.CASH_WHTYPE = '0' then 'ไม่หักภาษี ณ ที่จ่าย' WHEN h.CASH_WHTYPE = '1' THEN 'หักหน้าเช็ค' ELSE 'หักหน้างาน' END  as CASH_WHTYPE,h.CASH_CANO,SUBSTR(h.CASH_DATE,7,2) CONCAT '/' CONCAT SUBSTR(h.CASH_DATE,5,2)  CONCAT '/' CONCAT SUBSTR(h.CASH_DATE,1,4)as CASH_DATE,
   h.CASH_EMPY, h.CASH_COST, h.CASH_PPS1, h.CASH_PPS2, h.CASH_PPS3 ,SUBSTR( h.CASH_OPDF,7,2) CONCAT '/' CONCAT SUBSTR(h.CASH_OPDF,5,2)  CONCAT '/' CONCAT SUBSTR( h.CASH_OPDF,1,4)as CASH_OPDF,
   SUBSTR( h.CASH_OPDT,7,2) CONCAT '/' CONCAT SUBSTR(h.CASH_OPDT,5,2)  CONCAT '/' CONCAT SUBSTR( h.CASH_OPDT,1,4) as CASH_OPDT,
   SUBSTR( h.CASH_REDP,7,2) CONCAT '/' CONCAT SUBSTR(h.CASH_REDP,5,2)  CONCAT '/' CONCAT SUBSTR( h.CASH_REDP,1,4) as CASH_REDP,
   SUBSTR( h.CASH_STDP,7,2) CONCAT '/' CONCAT SUBSTR(h.CASH_STDP,5,2)  CONCAT '/' CONCAT SUBSTR( h.CASH_STDP,1,4)as  CASH_STDP,
-  H.CASH_PAYSUP,h.CASH_AMT, h.CASH_REQB ,h.CASH_REF1 ,A.idsunm  as StaffName ,eaaitm,eatx40 as CostCenterName
-  ,COALESCE (H.CASH_REF1, '-') AS CASH_REF1,COALESCE (H.CASH_REF3, '-') AS CASH_REF3,H.CASH_PAYT,D.IDSUNM  AS PayName
+  H.CASH_PAYSUP,h.CASH_AMT, h.CASH_REQB ,h.CASH_REF1 ,A.SASUNM  as StaffName ,eaaitm,eatx40 as CostCenterName
+  ,COALESCE (H.CASH_REF1, '-') AS CASH_REF1,COALESCE (H.CASH_REF3, '-') AS CASH_REF3,H.CASH_PAYT,D.SASUNM  AS PayName
   FROM brldta0100.FIN_CASHADALL as h
-  LEFT JOIN M3FDBPRD.CIDMAS A ON A.idstat = '20' AND A.idcono = h.CASH_CONO
+  LEFT JOIN M3FDBPRD.CIDADR A ON A.SAADID = 'ENAME' AND A.SACONO = h.CASH_CONO
   LEFT JOIN M3FDBPRD.CIDREF B ON B.IRRFID = 'BANK' AND B.IRSUCM NOT IN ('','-') AND B.ircono = h.CASH_CONO
   LEFT JOIN M3FDBPRD.FCHACC C ON C.eaaitp =  2 AND C.eacono = h.CASH_CONO AND h.CASH_DIVI = C.eadivi
-  LEFT JOIN M3FDBPRD.cidmas D ON D.IDCONO  = h.CASH_CONO AND D.IDSUNO  =  h.CASH_PAYSUP
+  LEFT JOIN M3FDBPRD.CIDADR D ON D.SACONO  = h.CASH_CONO AND D.SASUNO  =  h.CASH_PAYSUP AND D.SAADID = 'ENAME'
   WHERE h.CASH_CONO = $P{cono}
   AND h.CASH_DIVI = $P{divi}
   AND h.CASH_CANO = $P{cash_cano}
-  AND B.ircono  = A.idcono
-  AND B.IRSUNO = A.idsuno
-  AND A.idsuno = h.CASH_EMPY
-  AND C.eaaitm = h.CASH_COST
-  ) A LEFT JOIN (
-  SELECT IRSUNO,IRYRE1,IRPHNO,IRTFNO,IRSUCM,idsuno,idsunm
-  FROM M3FDBPRD.CIDMAS,M3FDBPRD.CIDREF
-  WHERE idstat = '20'
-  AND idcono = $P{cono}
+  AND B.ircono  = A.SACONO
+  AND B.IRSUNO = A.SASUNO
+  AND A.SASUNO = h.CASH_EMPY
+  AND C.eaaitm = h.CASH_COST) A LEFT JOIN (  SELECT SASUNO,IRYRE1,IRPHNO,IRTFNO,IRSUCM,SASUNO AS PAYERNO,SASUNM
+  FROM M3FDBPRD.CIDADR ,M3FDBPRD.CIDREF
+  WHERE SAADID = 'ENAME'
+  AND SACONO = $P{cono}
   AND IRRFID = 'BANK'
   AND IRSUCM NOT IN ('','-')
-  AND ircono  = idcono
-  AND IRSUNO = idsuno
-  ) B ON B.IDSUNO = A.CASH_PAYSUP]]>
+  AND ircono  = SACONO
+  AND IRSUNO = SASUNO) B ON B.PAYERNO = A.CASH_PAYSUP]]>
 	</queryString>
 	<field name="CASH_WHTYPE" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="CASH_WHTYPE"/>

@@ -10,16 +10,23 @@ import static cashadvance_multicompany.frmLogin.LoginCono;
 import static cashadvance_multicompany.frmLogin.LoginDivision;
 import static cashadvance_multicompany.frmLogin.LoginUsername;
 import static cashadvance_multicompany.frmLogin.Table_fin_caadd;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
@@ -468,6 +475,11 @@ public class CashAdvanRequest extends javax.swing.JFrame {
         DateOperationFrom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DateOperationFromActionPerformed(evt);
+            }
+        });
+        DateOperationFrom.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                DateOperationFromPropertyChange(evt);
             }
         });
         jPanel1.add(DateOperationFrom);
@@ -956,6 +968,26 @@ public class CashAdvanRequest extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(1118, 795));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+    private static Date calculateMaxFriday() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.WEEK_OF_YEAR, 3); // Move 3 weeks forward
+
+        // Find the next Friday
+        while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
+            calendar.add(Calendar.DAY_OF_YEAR, -1); // Move backward to the nearest Friday
+        }
+
+        return calendar.getTime();
+    }
+
+    /**
+     * Checks if the given date is a Friday.
+     */
+    private static boolean isFriday(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY;
+    }
 
     private void SetNewCashAdvanRequester() {
         ClassCheckDataProgram cdp = new ClassCheckDataProgram();
@@ -998,7 +1030,6 @@ public class CashAdvanRequest extends javax.swing.JFrame {
         btnaddline.setEnabled(false);
         radio_transfer.setEnabled(Status);
         radio_cheque.setEnabled(Status);
-
         Date DateOpeT = new Date();
         DateOperationFrom.setDate(DateOpeT);
 
@@ -1054,19 +1085,24 @@ public class CashAdvanRequest extends javax.swing.JFrame {
                 DatePlanSettem.setDate(checkdataprogram.GetDecmalTodate(rs.getInt("CASH_STDP")));
                 //    txtrecord1.setText(rs.getString("CASH_RCRA"));
                 cmb_IT1GP_1.setText(cgd.GetExpensSubGroupDescWithCode(rs.getString("CASH_EXPG")));
-                if (rs.getString("CASH_EXPG").equals("4.1")) {
+                if (rs.getString("CASH_EXPG").trim().equals("4.1")) {
                     importduty = true;
-                }
-                else{
+                } else {
                     importduty = false;
                 }
                 DateReceive1.setDate(checkdataprogram.GetDecmalTodate(rs.getInt("CASH_REDA")));
                 if (rs.getInt("CASH_STDT") != 0) {
                     DateSettlem.setDate(checkdataprogram.GetDecmalTodate(rs.getInt("CASH_STDT")));
                 }
-                if (rs.getInt("CASH_RCRA") != 0) {
-                    DateTransfer.setDate(checkdataprogram.GetDecmalTodate(rs.getInt("CASH_RCRA")));
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+                if (rs.getString("CASH_RCRA") != null && !rs.getString("CASH_RCRA").isEmpty()) {
+                    DateTransfer.setDate(formatter.parse(rs.getString("CASH_RCRA")));
+                } else {
+                    DateTransfer.setDate(null);
                 }
+//                if (rs.getString("CASH_RCRA") != null ) {
+//                    DateTransfer.setDate(checkdataprogram.GetDecmalTodate(rs.getString("CASH_RCRA")));
+//                }
                 String WHTAX = "";
                 WHTAX = rs.getString("CASH_WHTAX").trim();
                 String WHTYPE = rs.getString("CASH_WHTYPE").trim();
@@ -1203,6 +1239,79 @@ public class CashAdvanRequest extends javax.swing.JFrame {
 
     }
 
+    private void Cal_AmountSettlementWithGridDecimal(BigDecimal Advamt, BigDecimal AmtBfVat, BigDecimal AmtVat, BigDecimal TotalAmt) {
+        ClassCheckDataProgram checkdataprogram = new ClassCheckDataProgram();
+        BigDecimal Sum = BigDecimal.ZERO;
+
+        txtamtbfvat1.setText(AmtBfVat.toPlainString().trim());
+        txtvat1.setText(AmtVat.toPlainString().trim());
+        txtamt1.setText(TotalAmt.toPlainString().trim());
+
+        // Initialize WHTAX as BigDecimal
+        BigDecimal WHTAX = BigDecimal.ZERO;
+        if (!txtwhtax1.getText().trim().isEmpty()) {
+            try {
+                WHTAX = new BigDecimal(txtwhtax1.getText().trim());
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid WHTAX input: " + txtwhtax1.getText());
+                WHTAX = BigDecimal.ZERO;
+            }
+        }
+
+        txtwhtax1.setText(WHTAX.toPlainString().trim());
+
+        // Perform BigDecimal arithmetic: Sum = Advamt - (TotalAmt - WHTAX)
+        Sum = Advamt.subtract(TotalAmt.subtract(WHTAX));
+        System.out.println(Advamt + " - (" + TotalAmt + " - " + WHTAX + ")");
+        Sum = checkdataprogram.BigDicimal2digitReturn(Sum); // Assuming this works with BigDecimal
+        System.out.println("SUM: " + Sum);
+
+        if (Sum.compareTo(BigDecimal.ZERO) > 0) { // Sum > 0
+            txtreturn1.setText(Sum.toPlainString().trim());
+            txtrefund1.setText("0.00");
+            rdoReturnSCB.setEnabled(true);
+            rdoReturnKBANK.setEnabled(true);
+            ClearBanktxt();
+            modeforreceive = true;
+            System.out.println("SUM AFTER RECEIVE: " + Sum);
+        } else {
+            if (Sum.compareTo(BigDecimal.ZERO) != 0) { // Sum != 0
+                Sum = Sum.negate(); // Sum = Sum * -1
+                modeforreceive = false;
+                System.out.println("SUM LESS RECEIVE: " + Sum);
+            }
+
+            txtrefund1.setText(Sum.toPlainString().trim());
+            txtreturn1.setText("0.00");
+
+            if (Sum.compareTo(new BigDecimal("1000.00")) < 0 && Sum.compareTo(BigDecimal.ZERO) != 0) { // Sum < 1000 and Sum != 0
+                System.out.println("Sum is less than 1000 so petty cash");
+                if (LoginCono.equalsIgnoreCase("10")) {
+                    rdoPTC.setSelected(true);
+                    rdoPTC.setEnabled(true);
+                    modeforreceive = false;
+                } else {
+                    rdoTransBank.setSelected(true);
+                    rdoTransBank.setEnabled(true);
+                    modeforreceive = false;
+                }
+                ClearBanktxt();
+                rdoReturnSCB.setSelected(true);
+            } else if (Sum.compareTo(new BigDecimal("1000.00")) > 0) { // Sum > 1000
+                System.out.println("Sum is more than 1000 so normal return");
+                rdoReturnSCB.setSelected(true);
+                rdoTransBank.setSelected(true);
+                rdoTransBank.setEnabled(true);
+                modeforreceive = false;
+            } else {
+                System.out.println("Sum is 0 so no return");
+                Set_RdoSettlement(false);
+                modeforreceive = false;
+            }
+            modeforreceive = false;
+        }
+    }
+
     private void ClearBanktxt() {
         txtBName.setText("");
         txtBCode.setText("");
@@ -1262,6 +1371,60 @@ public class CashAdvanRequest extends javax.swing.JFrame {
 
     }
 
+//    private void Get_DetailGrid(String CashAdvanceNo) {
+//
+//        Classgetdata cgd = new Classgetdata();
+//        ClassCheckDataProgram checkdataprogram = new ClassCheckDataProgram();
+//        ResultSet rs = cgd.GetDataAdvanceDetailResultData(CashAdvanceNo);
+//        try {
+//            //    SetModel();
+//            model = (DefaultTableModel) griddetail.getModel();
+//            int iiii = 0;
+//
+//            Double amt = 0.00;
+//            Double vat = 0.00;
+//            Double amtBeforeVat = 0.00;
+//            Double Sum = 0.00;
+//            Double Advamt = Double.parseDouble(txtamount1.getText().trim());
+//            while (rs.next()) {
+//                //  String Nassme= cgd.GetItemName_MitMas(rs.getString("EPRL_ITNO").trim());
+//                model.setValueAt(rs.getString("SETT_INVC").trim(), iiii, 0);
+//                model.setValueAt(rs.getString("SETT_SUPP").trim(), iiii, 1);
+//                model.setValueAt(cgd.Get_SupplierNameWithCode2(rs.getString("SETT_SUPP").trim()), iiii, 2);
+//                model.setValueAt(checkdataprogram.GetDateFormatSetShowString(checkdataprogram.GetDecmalTodate(rs.getInt("SETT_INVD"))), iiii, 3);
+//
+//                model.setValueAt(rs.getString("SETT_DESC").trim(), iiii, 4);
+//                model.setValueAt(rs.getString("SETT_COST").trim(), iiii, 5);
+//
+//                model.setValueAt(rs.getDouble("SETT_AMTB"), iiii, 6);
+//                model.setValueAt(rs.getDouble("SETT_VATC"), iiii, 7);
+//                model.setValueAt(rs.getDouble("SETT_VATA"), iiii, 8);
+//                model.setValueAt(rs.getString("SETT_NODES"), iiii, 9);
+//                model.setValueAt(rs.getDouble("SETT_AMTT"), iiii, 10);
+//                model.setValueAt(rs.getString("SETT_BRAC"), iiii, 11);
+//                amt += rs.getDouble("SETT_AMTT");
+//                vat += rs.getDouble("SETT_VATA");
+//                amtBeforeVat += rs.getDouble("SETT_AMTB");
+//                iiii++;
+//
+//            }
+//
+//            amtBeforeVat = checkdataprogram.Double2digitReturn(amtBeforeVat);
+//            amt = checkdataprogram.Double2digitReturn(amt);
+//            vat = checkdataprogram.Double2digitReturn(vat);
+//            Cal_AmountSettlementWithGrid(Advamt, amtBeforeVat, vat, amt);
+//            DateTransfer.setEnabled(modeforreceive);
+//            jLabel15.setEnabled(modeforreceive);
+//            if (!modeforreceive) {
+//                DateTransfer.setDate(null);
+//            }
+//            rs.close();
+//
+//        } catch (Exception e) {
+//            System.out.println(e.toString());
+//        }
+//
+//    }
     private void Get_DetailGrid(String CashAdvanceNo) {
 
         Classgetdata cgd = new Classgetdata();
@@ -1272,11 +1435,11 @@ public class CashAdvanRequest extends javax.swing.JFrame {
             model = (DefaultTableModel) griddetail.getModel();
             int iiii = 0;
 
-            Double amt = 0.00;
-            Double vat = 0.00;
-            Double amtBeforeVat = 0.00;
-            Double Sum = 0.00;
-            Double Advamt = Double.parseDouble(txtamount1.getText().trim());
+            BigDecimal amt = new BigDecimal("0.00");
+            BigDecimal vat = new BigDecimal("0.00");
+            BigDecimal amtBeforeVat = new BigDecimal("0.00");
+            BigDecimal Sum = new BigDecimal("0.00");
+            BigDecimal Advamt = new BigDecimal(txtamount1.getText().trim());
             while (rs.next()) {
                 //  String Nassme= cgd.GetItemName_MitMas(rs.getString("EPRL_ITNO").trim());
                 model.setValueAt(rs.getString("SETT_INVC").trim(), iiii, 0);
@@ -1287,26 +1450,27 @@ public class CashAdvanRequest extends javax.swing.JFrame {
                 model.setValueAt(rs.getString("SETT_DESC").trim(), iiii, 4);
                 model.setValueAt(rs.getString("SETT_COST").trim(), iiii, 5);
 
-                model.setValueAt(rs.getDouble("SETT_AMTB"), iiii, 6);
-                model.setValueAt(rs.getDouble("SETT_VATC"), iiii, 7);
-                model.setValueAt(rs.getDouble("SETT_VATA"), iiii, 8);
+                model.setValueAt(rs.getBigDecimal("SETT_AMTB"), iiii, 6);
+                model.setValueAt(rs.getBigDecimal("SETT_VATC"), iiii, 7);
+                model.setValueAt(rs.getBigDecimal("SETT_VATA"), iiii, 8);
                 model.setValueAt(rs.getString("SETT_NODES"), iiii, 9);
-                model.setValueAt(rs.getDouble("SETT_AMTT"), iiii, 10);
+                model.setValueAt(rs.getBigDecimal("SETT_AMTT"), iiii, 10);
                 model.setValueAt(rs.getString("SETT_BRAC"), iiii, 11);
-                amt += rs.getDouble("SETT_AMTT");
-                vat += rs.getDouble("SETT_VATA");
-                amtBeforeVat += rs.getDouble("SETT_AMTB");
+                amt = amt.add(rs.getBigDecimal("SETT_AMTT"));
+                vat = vat.add(rs.getBigDecimal("SETT_VATA"));
+                amtBeforeVat = amtBeforeVat.add(rs.getBigDecimal("SETT_AMTB"));
+//                amtBeforeVat += rs.getDouble("SETT_AMTB");
                 iiii++;
 
             }
 
-            amtBeforeVat = checkdataprogram.Double2digitReturn(amtBeforeVat);
-            amt = checkdataprogram.Double2digitReturn(amt);
-            vat = checkdataprogram.Double2digitReturn(vat);
-            Cal_AmountSettlementWithGrid(Advamt, amtBeforeVat, vat, amt);
+            amtBeforeVat = checkdataprogram.BigDicimal2digitReturn(amtBeforeVat);
+            amt = checkdataprogram.BigDicimal2digitReturn(amt);
+            vat = checkdataprogram.BigDicimal2digitReturn(vat);
+            Cal_AmountSettlementWithGridDecimal(Advamt, amtBeforeVat, vat, amt);
             DateTransfer.setEnabled(modeforreceive);
             jLabel15.setEnabled(modeforreceive);
-            if(!modeforreceive){
+            if (!modeforreceive) {
                 DateTransfer.setDate(null);
             }
             rs.close();
@@ -1316,6 +1480,7 @@ public class CashAdvanRequest extends javax.swing.JFrame {
         }
 
     }
+
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelActionPerformed
@@ -1361,7 +1526,7 @@ public class CashAdvanRequest extends javax.swing.JFrame {
                     txtaccname.setText(Getsupp.getString("IRYRE1"));
                 }
 
-                String CASH_WHTAX = rs.getString("CASH_WHTYPE").trim();
+                String CASH_WHTAX = rs.getString("CASH_WHTAX").trim();
 
                 if (null != CASH_WHTAX) {
                     switch (CASH_WHTAX) {
@@ -1371,14 +1536,14 @@ public class CashAdvanRequest extends javax.swing.JFrame {
                             radiofrontwork.setSelected(false);
                             break;
                         case "1":
-                            radiotaxchec.setSelected(true);
-                            radiofrontwork.setSelected(false);
+                            radiotaxchec.setSelected(false);
+                            radiofrontwork.setSelected(true);
                             radionontax.setSelected(false);
                             break;
                         case "2":
                             radiotaxchec.setSelected(false);
-                            radiofrontwork.setSelected(true);
-                            radionontax.setSelected(false);
+                            radiofrontwork.setSelected(false);
+                            radionontax.setSelected(true);
                             break;
                     }
                 }
@@ -1557,12 +1722,66 @@ public class CashAdvanRequest extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnSaveActionPerformed
+
     private boolean CheckDataStep1ToSave() {
         ClassCheckDataProgram CcheckData = new ClassCheckDataProgram();
         Boolean DateOperationF = CcheckData.CheckdatainputDate(DateOperationFrom.getDate());
         Boolean DateOperationT = CcheckData.CheckdatainputDate(DateOperationTo.getDate());
-        Boolean Amount = CcheckData.CheckdatainputDouble(txtamount.getText());
+        Date DateOpeT = new Date();
+        JFrame frame = new JFrame("Date Picker Example");
+//        DateOperationFrom.setDate(DateOpeT);
+//        Date fromDate = DateOperationFrom.getDate();
+//        Date todayDate = new Date();
+////         Date currentDate = new Date();
+//        Date toDate = DateOperationTo.getDate();
+//        long diffInMillies = Math.abs(toDate.getTime() - fromDate.getTime());
+//        long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+//
+//        long diffInMillies2 = Math.abs(DateOpeT.getTime() - toDate.getTime());
+//        long diffInDays2 = TimeUnit.DAYS.convert(diffInMillies2, TimeUnit.MILLISECONDS);
+//        JXDatePicker datePicker = new JXDatePicker();
+//        long diffInMillies = Math.abs(toDate.getTime() - todayDate.getTime());
+//        long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
+//        long diffInMillies2 = Math.abs(DateOpeT.getTime() - fromDate.getTime());
+//        long diffInDays2 = TimeUnit.DAYS.convert(diffInMillies2, TimeUnit.MILLISECONDS);
+//        System.out.println(diffInDays);
+        Date selectedDate = DateOperationFrom.getDate();
+        if (selectedDate == null) {
+            JOptionPane.showMessageDialog(frame, "Please select a date.", "Error", JOptionPane.ERROR_MESSAGE);
+//            return;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.WEEK_OF_YEAR, 2); // Add 3 weeks
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY); // Set to Friday
+        Date thirdWeekFriday = calendar.getTime();
+
+        // Compare selected date with third week's Friday
+        if (selectedDate.after(thirdWeekFriday)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            JOptionPane.showMessageDialog(frame,
+                    "Operation Days  มากกว่า 3 สัปดาห์ โปรดรอจนกว่าจะอยู่ในช่วง 3 สัปดาห์ของ operation แล้วทำรายการใหม่",
+                    "Alert",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            System.out.println("The difference is less than 3 weeks.");
+        }
+        Boolean Amount = CcheckData.CheckdatainputDouble(txtamount.getText());
+//        if (diffInDays >= 20) {
+//            System.out.println("The difference is 20 days or more.");
+//        } else {
+//            System.out.println("The difference is less than 20 days.");
+//        }
+//         DateOperationFrom.getMonthView().setDay(true);
+//        DateOperationFrom.getMonthView().setDaySelectionAllowed(true);
+
+//        if (diffInDays > 20) {
+//            System.out.println("The difference is 20 days or more.");
+//            msbox("Operation Days  มากกว่า 20 วัน โปรดรอจนกว่าจะอยู่ในช่วง 20 วันของวัน operation แล้วทำรายการใหม่");
+//            return false;
+//        } else {
+//            System.out.println("The difference is less than 20 days.");
+//        }
         if (DateOperationF == false) {
             msbox("Please Check Date Operation From");
             return false;
@@ -1572,6 +1791,10 @@ public class CashAdvanRequest extends javax.swing.JFrame {
             msbox("Please Check Date Operation To");
             return false;
         }
+//        if (diffInDays >= 20) {
+//            msbox("Date given is greater than 20 days please reduce the Operation To");
+//             return false;
+//        }
 
         if (cmbstaffcode.getText().equals("")) {
             msbox("Please Check Staffcode");
@@ -1615,6 +1838,7 @@ public class CashAdvanRequest extends javax.swing.JFrame {
 
         return true;
     }
+
     private void radiocancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiocancelActionPerformed
         // TODO add your handling code here:
         if (radiocancel.isSelected()) {
@@ -1880,8 +2104,37 @@ public class CashAdvanRequest extends javax.swing.JFrame {
 //        Date_sett = c.getTime();
 //        DateSettlement.setDate(DateOpeF);
     }//GEN-LAST:event_DateOperationToActionPerformed
+    public class DatePickerExample {
 
+        public void main(String[] args) {
+            // Create a date picker
+            JXDatePicker datePicker = new JXDatePicker();
+
+            // Set today as the initial selected date
+            Calendar calendar = Calendar.getInstance();
+            datePicker.setDate(calendar.getTime());
+
+            // Calculate the max date (20 days from today)
+            Calendar maxDate = Calendar.getInstance();
+            maxDate.add(Calendar.DAY_OF_YEAR, 20);
+
+            // Restrict the selectable range
+            datePicker.getMonthView().setLowerBound(calendar.getTime());
+            datePicker.getMonthView().setUpperBound(maxDate.getTime());
+
+            // Create and set up the frame
+            JFrame frame = new JFrame("Date Picker Example");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLayout(new FlowLayout());
+            frame.add(datePicker);
+
+            // Display the frame
+            frame.pack();
+            frame.setVisible(true);
+        }
+    }
     private void DateOperationFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DateOperationFromActionPerformed
+
         Date DateOpeT = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(DateOperationFrom.getDate());
@@ -1994,6 +2247,34 @@ public class CashAdvanRequest extends javax.swing.JFrame {
             radio_transfer.setSelected(!radionormal.isSelected());
         }
     }//GEN-LAST:event_radio_chequeActionPerformed
+
+    private void DateOperationFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_DateOperationFromPropertyChange
+        Date selectedDate = DateOperationFrom.getDate();
+        JFrame frame = new JFrame("Date Picker Example");
+        if (selectedDate == null) {
+            JOptionPane.showMessageDialog(frame, "Please select a date.", "Error", JOptionPane.ERROR_MESSAGE);
+//            return;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.WEEK_OF_YEAR, 2); // Add 3 weeks
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY); // Set to Friday
+        Date thirdWeekFriday = calendar.getTime();
+
+        // Compare selected date with third week's Friday
+        if (selectedDate.after(thirdWeekFriday)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            JOptionPane.showMessageDialog(frame,
+                    "Operation Days  มากกว่า 3 สัปดาห์ โปรดรอจนกว่าจะอยู่ในช่วง 3 สัปดาห์ของ operation แล้วทำรายการใหม่",
+                    "Alert",
+                    JOptionPane.WARNING_MESSAGE);
+            DateOperationFrom.setDate(new Date());
+//             DateOperationTo.setDate(null);
+//              DateOperationFrom.setDate(null);
+        } else {
+            System.out.println("The difference is less than 3 weeks.");
+        }
+
+    }//GEN-LAST:event_DateOperationFromPropertyChange
 
     private void Cal_WHTAX() {
         Double AdvAmt = Double.parseDouble(txtamount1.getText().trim());

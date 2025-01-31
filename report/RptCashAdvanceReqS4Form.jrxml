@@ -97,7 +97,7 @@
 	</field>
 	<field name="TRANSFERDATE" class="java.lang.String"/>
 	<variable name="NetAmount" class="java.lang.Double" calculation="Count">
-		<variableExpression><![CDATA[$V{TotalAmount} ]]></variableExpression>
+		<variableExpression><![CDATA[$V{TotalAmount}]]></variableExpression>
 	</variable>
 	<variable name="TotalAmount" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{SETT_AMTT}]]></variableExpression>
@@ -826,7 +826,7 @@
 			<textField>
 				<reportElement x="126" y="75" width="235" height="20" uuid="c26035f0-762e-4c2e-bc0e-62f8dfeb7813"/>
 				<textElement>
-					<font fontName="TH SarabunPSK" size="14"/>
+					<font fontName="TH SarabunPSK" size="14" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COSTCENTERNAME}]]></textFieldExpression>
 			</textField>

@@ -207,17 +207,18 @@ public class frmLogin extends javax.swing.JFrame {
                 LoginDivision = cmbtexxxx[2];
                 LoginCompanyName = cmbtexxxx[0];
                 //PRODUCT
-//                Table_fin_caadd = "brldta0100.FIN_CASHADALL";
-//                Table_fin_sead = "brldta0100.FIN_SETTADALL";
-//                Table_fin_cact = "brldta0100.FIN_CACTBRALL";
-//                dbname = "BRLDTA0100";
-//                dbM3Name = "M3FDBPRD";
+                Table_fin_caadd = "brldta0100.FIN_CASHADALL";
+                Table_fin_sead = "brldta0100.FIN_SETTADALL";
+                Table_fin_cact = "brldta0100.FIN_CACTBRALL";
+                dbname = "BRLDTA0100";
+                dbM3Name = "M3FDBPRD";
+
                 //TESTING
-                Table_fin_caadd = "BRLDTABK01.FIN_CASHADALL";
-                Table_fin_sead = "BRLDTABK01.FIN_SETTADALL";
-                Table_fin_cact = "BRLDTABK01.FIN_CACTBRALL";
-                dbname = "BRLDTABK01";
-                dbM3Name = "M3FDBTST";
+//                Table_fin_caadd = "BRLDTABK01.FIN_CASHADALL";
+//                Table_fin_sead = "BRLDTABK01.FIN_SETTADALL";
+//                Table_fin_cact = "BRLDTABK01.FIN_CACTBRALL";
+//                dbname = "BRLDTABK01";
+//                dbM3Name = "M3FDBTST";
 
 //                String program = "Account";
                 String program = "Request";

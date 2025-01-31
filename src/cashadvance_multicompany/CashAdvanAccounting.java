@@ -269,7 +269,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
                 String Stattt = "";
                 Stattt = rs.getString("CASH_STAT").trim();
 
-                String CASH_WHTAX = rs.getString("CASH_WHTYPE").trim();
+                String CASH_WHTAX = rs.getString("CASH_WHTAX").trim();
 
                 if (null != CASH_WHTAX) {
                     switch (CASH_WHTAX) {

@@ -421,7 +421,8 @@ public class Classgetdata {
                     + "FROM " + dbname + ".CASH_IT2SG\n"
                     + "WHERE I2SG_CONO = '" + LoginCono + "'\n"
                     + "AND I2SG_DIVI = '" + LoginDivision + "'\n"
-                    + "AND I2SG_NOGP = '" + NoSub.trim() + "'";
+                    + "AND I2SG_NOGP = '" + NoSub.trim() + "'\n"
+                    + "ORDER BY I2SG_NOGP,CAST(SUBSTRING(I2SG_NOSG,3,4) AS INTEGER)";
             ResultSet rs1 = sta.executeQuery(Sql1);
             return rs1;
         } catch (Exception ex) {
@@ -438,7 +439,8 @@ public class Classgetdata {
                     + "            FROM " + dbname + ".CASH_IT2SG\n"
                     + "            WHERE I2SG_CONO = '" + LoginCono + "'\n"
                     + "            AND I2SG_DIVI = '" + LoginDivision + "'\n"
-                    + " AND I2SG_NOSG = '" + NoSub.trim() + "'";
+                    + " AND I2SG_NOSG = '" + NoSub.trim() + "'\n"
+                    + "ORDER BY I2SG_NOGP,CAST(SUBSTRING(I2SG_NOSG,3,4) AS INTEGER)";
             ResultSet rs1 = sta.executeQuery(Sql1);
             return rs1;
         } catch (Exception ex) {
@@ -492,7 +494,8 @@ public class Classgetdata {
                     + "FROM " + dbname + ".CASH_IT2SG \n"
                     + "WHERE I2SG_CONO = '" + LoginCono.trim() + "'\n"
                     + "AND I2SG_DIVI = '" + LoginDivision.trim() + "'\n"
-                    + "AND I2SG_NOSG  = '" + NoSub.trim() + "'";
+                    + "AND I2SG_NOSG  = '" + NoSub.trim() + "'\n"
+                    + "ORDER BY I2SG_NOGP,CAST(SUBSTRING(I2SG_NOSG,3,4) AS INTEGER)";
             ResultSet rs1 = sta.executeQuery(Sql1);
             while (rs1.next()) {
                 SubGroup = rs1.getString("DESCSG").trim();
@@ -794,7 +797,7 @@ public class Classgetdata {
                     + "    ,SUBSTR(sett_invd,7,2) || '/' || SUBSTR(sett_invd,5,2)|| '/' || SUBSTR(sett_invd,1,4) as DateInvoice    \n"
                     + "    ,sett_supp,sett_desc,sett_cost,sett_amtb,sett_vata,sett_amtt \n"
                     + "    ,CASE WHEN h.CASH_RETOBANK = 'SCB' then 'Return to ' ||  trim(CCTX15) \n"
-//                    + "    WHEN h.CASH_RETOBANK = 'KBANK' then 'Return to ' || trim(CCTX15) \n"
+                    //                    + "    WHEN h.CASH_RETOBANK = 'KBANK' then 'Return to ' || trim(CCTX15) \n"
                     + "    WHEN h.CASH_RETOBANK = '' then 'No Return ' \n"
                     + "    WHEN h.CASH_RETOBANK != '' THEN 'Claim back from  ' || trim(CCTX15) END as NameAmtPercash  \n"
                     + "    ,eatx40 as CostCenterName,COALESCE(trim(IRYRE1),BA.FBA_NAME  || ' : ' ||BA.FBA_ACCNO) AS Payment,TRIM(CASH_RETOBANK) as CASH_RETOBANK \n"

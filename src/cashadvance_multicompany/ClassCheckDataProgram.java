@@ -6,6 +6,8 @@
 package cashadvance_multicompany;
 
 import static cashadvance_multicompany.ConnectDB2.ConnectionDB;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -54,6 +56,17 @@ public class ClassCheckDataProgram {
             return 0;
         }
 
+    }
+
+    public BigDecimal BigDicimal2digitReturn(BigDecimal num) {
+//        BigDecimal originalValue = new BigDecimal("123.456789");
+
+        // Set to 2 decimal places with rounding
+        BigDecimal twoDecimalValue = num.setScale(2, RoundingMode.HALF_UP);
+
+        System.out.println("Original Value: " + num);
+        System.out.println("Two Decimal Places: " + twoDecimalValue);
+        return twoDecimalValue;
     }
 
     public boolean CheckdatainputDouble(String TextData) {

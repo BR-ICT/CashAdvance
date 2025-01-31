@@ -14,6 +14,7 @@ import static cashadvance_multicompany.frmLogin.Table_fin_caadd;
 import static cashadvance_multicompany.frmLogin.Table_fin_cact;
 import static cashadvance_multicompany.frmLogin.Table_fin_sead;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -339,7 +340,7 @@ public class ClassSetdata {
                 StrInsertHeader = "UPDATE " + Table_fin_caadd;
                 StrInsertHeader += " SET CASH_STDT='" + CASH_STDT + "', CASH_WHTAX= '" + CASH_WHTAX + "' , CASH_REAMT = '" + CASH_REAMT.trim() + "',CASH_RETOBANK= '" + CASH_RETOBANK.trim() + "' ";
                 StrInsertHeader += " ,CASH_STAT='" + CASH_STAT + "',CASH_RCRA= " + Transferdatesubmission + "";
-                StrInsertHeader += " WHERE CASH_CANO = '" + CASH_CANO + "'";
+                StrInsertHeader += " WHERE CASH_CANO = '" + CASH_CANO + "' AND CASH_CONO = '" + LoginCono + "'";
 
             }
 
@@ -391,31 +392,33 @@ public class ClassSetdata {
                     String SETT_DESC = (String) model.getValueAt(i, 4);
                     String SETT_COST = (String) model.getValueAt(i, 5);
 
-                    double SETT_AMTB = 0;
+                    BigDecimal SETT_AMTB = new BigDecimal(0);
                     try {
-                        SETT_AMTB = (double) model.getValueAt(i, 6);
+                        SETT_AMTB = BigDecimal.valueOf((Double) model.getValueAt(i, 6));
                     } catch (Exception e) {
-                        SETT_AMTB = 0;
+                        SETT_AMTB = new BigDecimal(0) ;
                     }
-                    double SETT_VATC = 0;
+                    BigDecimal SETT_VATC = new BigDecimal(0);
                     try {
-                        SETT_VATC = (double) model.getValueAt(i, 7);
+                        SETT_VATC = BigDecimal.valueOf((Double)model.getValueAt(i, 7));
                     } catch (Exception e) {
-                        SETT_VATC = 0;
+                        SETT_VATC = new BigDecimal(0) ;
                     }
-                    double SETT_VATA = 0;
+                    BigDecimal SETT_VATA = new BigDecimal(0) ;
                     try {
-                        SETT_VATA = (double) model.getValueAt(i, 8);
+                        SETT_VATA =BigDecimal.valueOf((Double)model.getValueAt(i, 8));
+//                                (BigDecimal) model.getValueAt(i, 8);
                     } catch (Exception e) {
-                        SETT_VATA = 0;
+                        SETT_VATA = new BigDecimal(0) ;
                     }
                     String SETT_NODES = (String) model.getValueAt(i, 9);
 
-                    double SETT_AMTT = 0;
+                    BigDecimal SETT_AMTT = new BigDecimal(0) ;
                     try {
-                        SETT_AMTT = (double) model.getValueAt(i, 10);
+                        SETT_AMTT = BigDecimal.valueOf((Double)model.getValueAt(i, 10));
+//                                (BigDecimal) model.getValueAt(i, 10);
                     } catch (Exception e) {
-                        SETT_AMTT = 0;
+                        SETT_AMTT = new BigDecimal(0) ;
                     }
                     String SETT_BRAC = (String) model.getValueAt(i, 11);
                     String SETT_STAT = "10";
