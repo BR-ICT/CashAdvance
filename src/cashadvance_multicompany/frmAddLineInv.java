@@ -275,6 +275,8 @@ public class frmAddLineInv extends javax.swing.JFrame {
         rdo_ITVAT = new javax.swing.JRadioButton();
         rdo_IPVAT = new javax.swing.JRadioButton();
         rdoManualVatInput = new javax.swing.JRadioButton();
+        txtvatAMT = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -485,6 +487,19 @@ public class frmAddLineInv extends javax.swing.JFrame {
         getContentPane().add(rdoManualVatInput);
         rdoManualVatInput.setBounds(40, 390, 180, 27);
 
+        txtvatAMT.setEditable(false);
+        txtvatAMT.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtvatAMT.setText("0");
+        txtvatAMT.setEnabled(false);
+        getContentPane().add(txtvatAMT);
+        txtvatAMT.setBounds(630, 140, 70, 30);
+
+        jLabel26.setForeground(new java.awt.Color(255, 0, 51));
+        jLabel26.setText("Vat AMT:");
+        jLabel26.setEnabled(false);
+        getContentPane().add(jLabel26);
+        jLabel26.setBounds(630, 120, 70, 20);
+
         setSize(new java.awt.Dimension(729, 478));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
@@ -674,14 +689,13 @@ public class frmAddLineInv extends javax.swing.JFrame {
 
                 BigDecimal amt = new BigDecimal(txtamtline.getText());
                 try {
-                    
+
 //                     amt = amt.add(); amt = cdp.Double2digitReturn(Double.parseDouble());
                 } catch (Exception e) {
 //                    amt = 0;
                 }
 
 //                double vatc = 0;
-                
                 BigDecimal vatc = new BigDecimal(txtvatcline.getText());
 //                try {
 //                    vatc = cdp.Double2digitReturn(Double.parseDouble(txtvatcline.getText()));
@@ -689,19 +703,19 @@ public class frmAddLineInv extends javax.swing.JFrame {
 //                    vatc = 0;
 //                }
 //                double vatamt_1 = 0;
-                 BigDecimal vatamt_1 = new BigDecimal(0);
+                BigDecimal vatamt_1 = new BigDecimal(0);
 //                vatamt_1
                 if (rdoManualVatInput.isSelected()) {
-                    vatamt_1 = vatc;
+                    vatamt_1 = new BigDecimal(txtvatAMT.getText());
 //                    vatc = 7;
                 } else {
-                    vatamt_1 =  amt.multiply(vatc)
-                                 .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                    vatamt_1 = amt.multiply(vatc)
+                            .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                 }
 
                 // double vatamt=Classcheck.Double2digitReturn((double)(model.getValueAt(i, 7)));// BANK EDIT FOR RACHANEEWAN
 //                String vatamt_2 = cdp.Round2digiReturn(vatamt_1);
-                 String vatamt_2 = vatamt_1.setScale(2, RoundingMode.HALF_UP).toPlainString();
+                String vatamt_2 = vatamt_1.setScale(2, RoundingMode.HALF_UP).toPlainString();
                 BigDecimal totalamt;
                 if (!importduty) {
                     totalamt = amt.add(new BigDecimal(vatamt_2));
@@ -725,7 +739,7 @@ public class frmAddLineInv extends javax.swing.JFrame {
                             vatamt_1 = vatc;
                             ClassSetdata cds = new ClassSetdata();
                             cds.InsertLine(LoginCono, LoginDivision, NoDesc, BranchAcc, txtAdvanceNo1.getText().trim(), txtinvoiceline.getText().trim(), txtsupline.getText(), EPRH_RQSDT,
-                                    txtdescline.getText(), txtcostline.getText().toUpperCase(), txtamtline.getText(), "7",
+                                    txtdescline.getText(), txtcostline.getText().toUpperCase(), txtamtline.getText(), txtvatcline.getText(),
                                     vatamt_2, String.valueOf(totalamt), "10", importduty
                             );
                         } else {
@@ -955,10 +969,18 @@ public class frmAddLineInv extends javax.swing.JFrame {
     private void rdoManualVatInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoManualVatInputActionPerformed
         if (rdoManualVatInput.isSelected()) {
             System.out.println("Manual VAT is enabled");
-            jLabel23.setText("VatAmount");
+//            jLabel23.setText("VatAmount");
+            txtvatAMT.setEnabled(true);
+            jLabel26.setEnabled(true);
+             txtvatAMT.setEditable(true);
+//            jLabel26(true);
+
         } else {
             System.out.println("Manual VAT is disabled");
-            jLabel23.setText("Vat%");
+//            jLabel23.setText("Vat%");
+            txtvatAMT.setEnabled(false);
+            jLabel26.setEnabled(false);
+            txtvatAMT.setEditable(false);
         }
     }//GEN-LAST:event_rdoManualVatInputActionPerformed
 
@@ -1134,6 +1156,7 @@ public class frmAddLineInv extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
@@ -1153,6 +1176,7 @@ public class frmAddLineInv extends javax.swing.JFrame {
     private javax.swing.JTextField txtinvoiceline;
     public static javax.swing.JTextField txtname;
     public static javax.swing.JTextField txtsupline;
+    private javax.swing.JTextField txtvatAMT;
     private javax.swing.JTextField txtvatcline;
     // End of variables declaration//GEN-END:variables
 }

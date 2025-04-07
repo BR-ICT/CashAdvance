@@ -150,6 +150,10 @@ public class CashAdvanRequest extends javax.swing.JFrame {
         jLabel38 = new javax.swing.JLabel();
         radio_cheque = new javax.swing.JRadioButton();
         radio_transfer = new javax.swing.JRadioButton();
+        radiofrontpaytoemployee = new javax.swing.JRadioButton();
+        radiofrontpaytosupplier = new javax.swing.JRadioButton();
+        jLabel41 = new javax.swing.JLabel();
+        jLabel43 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
@@ -350,6 +354,7 @@ public class CashAdvanRequest extends javax.swing.JFrame {
         radiosubmit.setBounds(880, 50, 70, 27);
 
         txtsearchStaffcode.setText("Search");
+        txtsearchStaffcode.setEnabled(false);
         txtsearchStaffcode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtsearchStaffcodeActionPerformed(evt);
@@ -413,9 +418,9 @@ public class CashAdvanRequest extends javax.swing.JFrame {
         jPanel1.add(txtsearchSupplier1);
         txtsearchSupplier1.setBounds(470, 360, 80, 30);
 
-        jLabel1.setText("ภาษี หัก ณ ที่จ่าย");
+        jLabel1.setText("จ่ายให้");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(580, 199, 100, 30);
+        jLabel1.setBounds(630, 380, 50, 30);
 
         radiotaxchec.setText(" หักหน้าเช็ค");
         radiotaxchec.addActionListener(new java.awt.event.ActionListener() {
@@ -543,6 +548,34 @@ public class CashAdvanRequest extends javax.swing.JFrame {
         });
         jPanel1.add(radio_transfer);
         radio_transfer.setBounds(130, 330, 100, 27);
+
+        radiofrontpaytoemployee.setText("Advance to Employee");
+        radiofrontpaytoemployee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radiofrontpaytoemployeeActionPerformed(evt);
+            }
+        });
+        jPanel1.add(radiofrontpaytoemployee);
+        radiofrontpaytoemployee.setBounds(680, 380, 200, 30);
+
+        radiofrontpaytosupplier.setText("Direct Payment to Supplier");
+        radiofrontpaytosupplier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radiofrontpaytosupplierActionPerformed(evt);
+            }
+        });
+        jPanel1.add(radiofrontpaytosupplier);
+        radiofrontpaytosupplier.setBounds(680, 410, 220, 30);
+
+        jLabel41.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel41.setForeground(new java.awt.Color(204, 0, 51));
+        jLabel41.setText("*Please Chose a Pay to option to start Search");
+        jPanel1.add(jLabel41);
+        jLabel41.setBounds(120, -10, 380, 40);
+
+        jLabel43.setText("ภาษี หัก ณ ที่จ่าย");
+        jPanel1.add(jLabel43);
+        jLabel43.setBounds(580, 199, 100, 30);
 
         jTabbedPane1.addTab("Cash Advance Entry", jPanel1);
 
@@ -1547,7 +1580,23 @@ public class CashAdvanRequest extends javax.swing.JFrame {
                             break;
                     }
                 }
-
+                String payto = rs.getString("CASH_PAYTO").trim();
+                if (payto == null) {
+                    radiofrontpaytoemployee.setSelected(true);
+                    radiofrontpaytosupplier.setSelected(false);
+                    break;
+                } else {
+                    switch (payto) {
+                        case "Employee":
+                            radiofrontpaytoemployee.setSelected(true);
+                            radiofrontpaytosupplier.setSelected(false);
+                            break;
+                        case "Supplier":
+                            radiofrontpaytoemployee.setSelected(false);
+                            radiofrontpaytosupplier.setSelected(true);
+                            break;
+                    }
+                }
                 if (null != Stattt) {
                     switch (Stattt) {
                         case "10":
@@ -1616,7 +1665,12 @@ public class CashAdvanRequest extends javax.swing.JFrame {
             String[] CASH_PAYSUP = cmbPaysup.trim().split(":");
             String EXPGROUP = (String) cmb_IT1GP.getText().trim();
             String[] CASH_EXPGP = EXPGROUP.trim().split(":");
-
+            String payto = "";
+            if (radiofrontpaytoemployee.isSelected()) {
+                payto = "Employee";
+            } else {
+                payto = "Supplier";
+            }
             String CASH_PPS1 = txtpurpose_1.getText().trim();
             int countPurpose = CASH_PPS1.length();
             if (countPurpose > 60) {
@@ -1692,14 +1746,14 @@ public class CashAdvanRequest extends javax.swing.JFrame {
                         CASH_EMPY, CASH_COST, CASH_OPDF,
                         CASH_OPDT, CASH_PPS1, CASH_PPS2,
                         CASH_PPS3, CASH_AMT, CASH_REDP,
-                        CASH_STDP, REF_PO, CASH_REQB, "10", CASH_PAYSUP[0], LoginCono, LoginDivision, CASH_EXPGP[0], CASH_WHTAX_TYPE, PO_NO.trim(), payment_type);
+                        CASH_STDP, REF_PO, CASH_REQB, "10", CASH_PAYSUP[0], LoginCono, LoginDivision, CASH_EXPGP[0], CASH_WHTAX_TYPE, PO_NO.trim(), payment_type, payto);
 
             } else {
                 CASH_CANO = setdata.SaveCashAdvanceRequesterHeaderStep1Form(CASH_CANO, CASH_DATE,
                         CASH_EMPY, CASH_COST, CASH_OPDF,
                         CASH_OPDT, CASH_PPS1, CASH_PPS2,
                         CASH_PPS3, CASH_AMT, CASH_REDP,
-                        CASH_STDP, REF_PO, CASH_REQB, CASH_STAT, CASH_PAYSUP[0], LoginCono, LoginDivision, CASH_EXPGP[0], CASH_WHTAX_TYPE, PO_NO.trim(), payment_type);
+                        CASH_STDP, REF_PO, CASH_REQB, CASH_STAT, CASH_PAYSUP[0], LoginCono, LoginDivision, CASH_EXPGP[0], CASH_WHTAX_TYPE, PO_NO.trim(), payment_type, payto);
 
             }
 
@@ -1870,6 +1924,12 @@ public class CashAdvanRequest extends javax.swing.JFrame {
 
     private void txtsearchStaffcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtsearchStaffcodeActionPerformed
         frmsearch.ProgramStep = "cashadvstep1";
+        if (radiofrontpaytoemployee.isSelected()) {
+            frmsearch.Payto = "Employee";
+        } else {
+            frmsearch.Payto = "Supplier";
+        }
+
         new frmsearch().setVisible(true);
     }//GEN-LAST:event_txtsearchStaffcodeActionPerformed
 
@@ -2054,6 +2114,7 @@ public class CashAdvanRequest extends javax.swing.JFrame {
 
     private void txtsearchSupplier1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtsearchSupplier1ActionPerformed
         frmsearch.ProgramStep = "cashadvstep5";
+        frmsearch.Payto = "";
         new frmsearch().setVisible(true);
         txtbranch.setText("");
         txtaccno.setText("");
@@ -2078,6 +2139,7 @@ public class CashAdvanRequest extends javax.swing.JFrame {
     private void txtsearchEXPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtsearchEXPActionPerformed
         ClassCheckDataProgram CcheckData = new ClassCheckDataProgram();
         Boolean DateOperationF = CcheckData.CheckdatainputDate(DateOperationFrom.getDate());
+
 //
 //        if (DateOperationF == false) {
 //            msbox("Please Check Date Operation From");
@@ -2276,6 +2338,30 @@ public class CashAdvanRequest extends javax.swing.JFrame {
 
     }//GEN-LAST:event_DateOperationFromPropertyChange
 
+    private void radiofrontpaytoemployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiofrontpaytoemployeeActionPerformed
+        // TODO add your handling code here:
+        if (radiofrontpaytoemployee.isSelected()) {
+            radiofrontpaytosupplier.setSelected(!radiofrontpaytoemployee.isSelected());
+            txtsearchStaffcode.setEnabled(radiofrontpaytoemployee.isSelected());
+        } else {
+
+            txtsearchStaffcode.setEnabled(radiofrontpaytoemployee.isSelected());
+        }
+        cmbstaffcode.setText("");
+    }//GEN-LAST:event_radiofrontpaytoemployeeActionPerformed
+
+    private void radiofrontpaytosupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiofrontpaytosupplierActionPerformed
+        // TODO add your handling code here:
+        if (radiofrontpaytosupplier.isSelected()) {
+            radiofrontpaytoemployee.setSelected(!radiofrontpaytosupplier.isSelected());
+            txtsearchStaffcode.setEnabled(radiofrontpaytosupplier.isSelected());
+        } else {
+
+            txtsearchStaffcode.setEnabled(radiofrontpaytosupplier.isSelected());
+        }
+        cmbstaffcode.setText("");
+    }//GEN-LAST:event_radiofrontpaytosupplierActionPerformed
+
     private void Cal_WHTAX() {
         Double AdvAmt = Double.parseDouble(txtamount1.getText().trim());
         Double AmtBFV = Double.parseDouble(txtamtbfvat1.getText().trim());
@@ -2409,6 +2495,8 @@ public class CashAdvanRequest extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
+    private javax.swing.JLabel jLabel43;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -2423,6 +2511,8 @@ public class CashAdvanRequest extends javax.swing.JFrame {
     private javax.swing.JRadioButton radio_cheque;
     private javax.swing.JRadioButton radio_transfer;
     private javax.swing.JRadioButton radiocancel;
+    public static javax.swing.JRadioButton radiofrontpaytoemployee;
+    public static javax.swing.JRadioButton radiofrontpaytosupplier;
     public static javax.swing.JRadioButton radiofrontwork;
     public static javax.swing.JRadioButton radiofrontwork_1;
     public static javax.swing.JRadioButton radionontax;

@@ -24,6 +24,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 public class CashAdvanAccounting extends javax.swing.JFrame {
 
     public static String CashAdvanceRequestNo = "";
+//    public static String payto = "";
     DefaultTableModel model;
     DefaultTableModel model2;
     private JComboBox countryCombo;
@@ -34,7 +35,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
     public CashAdvanAccounting() {
         initComponents();
         jTabbedPane2.hide();
-        
+
         rdoReturnKBANK.setVisible(false);
         SetNewCashAdvanAccounting();
         if (!CashAdvanceRequestNo.equals("")) {
@@ -59,6 +60,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
                 SetFormDataWithSTEP2_Cash(CashAdvanceRequestNo);
                 txtrecord1.setText(LoginUsername);
             }
+            System.out.println("Status" + CASH_STAT);
 //            if (CASH_STAT.equals("45")) {
 //                Set_ActiveStep1(false);
 //                Set_ActiveStep2(false);
@@ -124,9 +126,9 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
                 WHTAX = rs.getString("CASH_WHTAX").trim();
                 String WHTYPE = rs.getString("CASH_WHTYPE").trim();
                 txtwhtax1.setText(WHTAX);
-                if (WHTAX.equalsIgnoreCase("1")) {
+                if (WHTYPE.equalsIgnoreCase("1")) {
                     radiotaxchec_1.setSelected(true);
-                } else if (WHTAX.equalsIgnoreCase("2")) {
+                } else if (WHTYPE.equalsIgnoreCase("2")) {
                     radiofrontwork_1.setSelected(true);
                     txtwhtax1.setEditable(true);
                 } else {
@@ -226,7 +228,9 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
     }
 
     private void SetFormDataWithSTEP1_Cash(String CASH_CANO_) {
+
         Classgetdata cgd = new Classgetdata();
+        System.out.println("Step 1");
         ClassCheckDataProgram checkdataprogram = new ClassCheckDataProgram();
 
         ResultSet rs = cgd.GetDataCashAdvanRequest_HeaderResultData(CASH_CANO_);
@@ -287,6 +291,25 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
                             radionontax.setSelected(false);
                             radiotaxchec.setSelected(false);
                             radiofrontwork.setSelected(true);
+                            break;
+                    }
+                }
+
+                String payto = rs.getString("CASH_PAYTO");
+                System.out.println("payto" + payto);
+                if (payto == null) {
+                    radiofrontpaytoemployeeAccountant.setSelected(true);
+                    radiofrontpaytosupplierAccountant.setSelected(false);
+                    break;
+                } else {
+                    switch (payto) {
+                        case "Employee":
+                            radiofrontpaytoemployeeAccountant.setSelected(true);
+                            radiofrontpaytosupplierAccountant.setSelected(false);
+                            break;
+                        case "Supplier":
+                            radiofrontpaytoemployeeAccountant.setSelected(false);
+                            radiofrontpaytosupplierAccountant.setSelected(true);
                             break;
                     }
                 }
@@ -533,6 +556,9 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         jLabel72 = new javax.swing.JLabel();
         radio_transfer = new javax.swing.JRadioButton();
         radio_cheque = new javax.swing.JRadioButton();
+        jLabel74 = new javax.swing.JLabel();
+        radiofrontpaytoemployeeAccountant = new javax.swing.JRadioButton();
+        radiofrontpaytosupplierAccountant = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel24 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
@@ -750,7 +776,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         cmbcostcenter.setEnabled(false);
         AutoCompleteDecorator.decorate(cmbcostcenter);
         jPanel1.add(cmbcostcenter);
-        cmbcostcenter.setBounds(120, 80, 361, 26);
+        cmbcostcenter.setBounds(120, 80, 361, 29);
 
         cmbstaffcode.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cmbstaffcode.setEnabled(false);
@@ -758,12 +784,12 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         jPanel1.add(cmbstaffcode);
         cmbstaffcode.setBounds(120, 10, 330, 20);
         jPanel1.add(DateAccount);
-        DateAccount.setBounds(120, 350, 190, 28);
+        DateAccount.setBounds(120, 350, 190, 29);
 
         DateOperationTo.setEditable(false);
         DateOperationTo.setEnabled(false);
         jPanel1.add(DateOperationTo);
-        DateOperationTo.setBounds(370, 110, 190, 28);
+        DateOperationTo.setBounds(370, 110, 190, 29);
 
         txtpurpose_3.setEditable(false);
         txtpurpose_3.setEnabled(false);
@@ -776,11 +802,11 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
 
         DateOperationFrom.setEnabled(false);
         jPanel1.add(DateOperationFrom);
-        DateOperationFrom.setBounds(120, 110, 190, 28);
+        DateOperationFrom.setBounds(120, 110, 190, 29);
 
         DateReceive.setEditable(false);
         jPanel1.add(DateReceive);
-        DateReceive.setBounds(420, 320, 190, 28);
+        DateReceive.setBounds(420, 320, 190, 29);
 
         txtamount.setEditable(false);
         txtamount.setEnabled(false);
@@ -850,7 +876,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel1.add(radioreturn);
-        radioreturn.setBounds(870, 130, 140, 18);
+        radioreturn.setBounds(870, 130, 140, 27);
 
         radionormal.setSelected(true);
         radionormal.setText("Normal");
@@ -860,7 +886,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel1.add(radionormal);
-        radionormal.setBounds(870, 10, 140, 18);
+        radionormal.setBounds(870, 10, 140, 27);
 
         radiosubmit.setText("Submit");
         radiosubmit.addActionListener(new java.awt.event.ActionListener() {
@@ -869,7 +895,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel1.add(radiosubmit);
-        radiosubmit.setBounds(870, 40, 140, 18);
+        radiosubmit.setBounds(870, 40, 140, 27);
 
         radiocancel.setText("Cancel");
         radiocancel.addActionListener(new java.awt.event.ActionListener() {
@@ -878,7 +904,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel1.add(radiocancel);
-        radiocancel.setBounds(870, 100, 140, 18);
+        radiocancel.setBounds(870, 100, 140, 27);
 
         jLabel23.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel23.setText("Checked By");
@@ -887,7 +913,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
 
         DateSettlement.setEditable(false);
         jPanel1.add(DateSettlement);
-        DateSettlement.setBounds(120, 320, 190, 28);
+        DateSettlement.setBounds(120, 320, 190, 29);
 
         jRadioshowreport.setText("Show in report");
         jRadioshowreport.addActionListener(new java.awt.event.ActionListener() {
@@ -896,7 +922,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jRadioshowreport);
-        jRadioshowreport.setBounds(870, 70, 140, 18);
+        jRadioshowreport.setBounds(870, 70, 140, 27);
 
         txtcustomer.setEditable(false);
         txtcustomer.addActionListener(new java.awt.event.ActionListener() {
@@ -941,7 +967,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel1.add(radiofrontwork);
-        radiofrontwork.setBounds(870, 220, 83, 30);
+        radiofrontwork.setBounds(870, 220, 106, 30);
 
         griddetailac.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1013,7 +1039,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btn_preview);
-        btn_preview.setBounds(870, 260, 140, 28);
+        btn_preview.setBounds(870, 260, 140, 29);
 
         radiotaxchec.setText(" หักหน้าเช็ค");
         radiotaxchec.addActionListener(new java.awt.event.ActionListener() {
@@ -1048,7 +1074,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel1.add(radio_transfer);
-        radio_transfer.setBounds(420, 250, 86, 18);
+        radio_transfer.setBounds(420, 250, 100, 27);
 
         radio_cheque.setText("CHEQUE");
         radio_cheque.addActionListener(new java.awt.event.ActionListener() {
@@ -1057,7 +1083,29 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel1.add(radio_cheque);
-        radio_cheque.setBounds(530, 250, 100, 18);
+        radio_cheque.setBounds(530, 250, 100, 27);
+
+        jLabel74.setText("จ่ายให้");
+        jPanel1.add(jLabel74);
+        jLabel74.setBounds(760, 310, 50, 30);
+
+        radiofrontpaytoemployeeAccountant.setText("Advance to Employee");
+        radiofrontpaytoemployeeAccountant.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radiofrontpaytoemployeeAccountantActionPerformed(evt);
+            }
+        });
+        jPanel1.add(radiofrontpaytoemployeeAccountant);
+        radiofrontpaytoemployeeAccountant.setBounds(810, 310, 200, 30);
+
+        radiofrontpaytosupplierAccountant.setText("Direct Payment to Supplier");
+        radiofrontpaytosupplierAccountant.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radiofrontpaytosupplierAccountantActionPerformed(evt);
+            }
+        });
+        jPanel1.add(radiofrontpaytosupplierAccountant);
+        radiofrontpaytosupplierAccountant.setBounds(810, 340, 220, 30);
 
         jTabbedPane1.addTab("Cash Advance Voucher", jPanel1);
 
@@ -1130,20 +1178,20 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel3.add(cmbcostcenter1);
-        cmbcostcenter1.setBounds(120, 90, 361, 26);
+        cmbcostcenter1.setBounds(120, 90, 361, 29);
 
         cmbstaffcode1.setEnabled(false);
         AutoCompleteDecorator.decorate(cmbstaffcode1);
         jPanel3.add(cmbstaffcode1);
-        cmbstaffcode1.setBounds(120, 50, 361, 26);
+        cmbstaffcode1.setBounds(120, 50, 361, 29);
 
         DateAccount1.setEnabled(false);
         jPanel3.add(DateAccount1);
-        DateAccount1.setBounds(120, 380, 140, 28);
+        DateAccount1.setBounds(120, 380, 140, 29);
 
         DateOperationTo1.setEditable(false);
         jPanel3.add(DateOperationTo1);
-        DateOperationTo1.setBounds(370, 140, 190, 28);
+        DateOperationTo1.setBounds(370, 140, 190, 29);
 
         txtpurpose1_3.setEditable(false);
         txtpurpose1_3.setEnabled(false);
@@ -1156,12 +1204,12 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
 
         DateOperationFrom1.setEnabled(false);
         jPanel3.add(DateOperationFrom1);
-        DateOperationFrom1.setBounds(120, 140, 190, 28);
+        DateOperationFrom1.setBounds(120, 140, 190, 29);
 
         DatePlanReceive1.setEditable(false);
         DatePlanReceive1.setEnabled(false);
         jPanel3.add(DatePlanReceive1);
-        DatePlanReceive1.setBounds(120, 340, 140, 28);
+        DatePlanReceive1.setBounds(120, 340, 140, 29);
 
         txtamount1.setEditable(false);
         txtamount1.setEnabled(false);
@@ -1222,7 +1270,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel3.add(radionormal1);
-        radionormal1.setBounds(900, 10, 93, 18);
+        radionormal1.setBounds(900, 10, 93, 27);
 
         radiosubmit1.setText("Submit");
         radiosubmit1.addActionListener(new java.awt.event.ActionListener() {
@@ -1231,7 +1279,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel3.add(radiosubmit1);
-        radiosubmit1.setBounds(900, 40, 93, 18);
+        radiosubmit1.setBounds(900, 40, 93, 27);
 
         radiocancel1.setText("Cancel");
         radiocancel1.addActionListener(new java.awt.event.ActionListener() {
@@ -1240,7 +1288,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel3.add(radiocancel1);
-        radiocancel1.setBounds(900, 70, 93, 18);
+        radiocancel1.setBounds(900, 70, 93, 27);
 
         jLabel36.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel36.setText("Reccorder");
@@ -1250,7 +1298,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         DatePlanSettlement1.setEditable(false);
         DatePlanSettlement1.setEnabled(false);
         jPanel3.add(DatePlanSettlement1);
-        DatePlanSettlement1.setBounds(380, 340, 140, 28);
+        DatePlanSettlement1.setBounds(380, 340, 140, 29);
 
         jLabel37.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel37.setText("Plan Settl Date");
@@ -1271,7 +1319,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         jPanel3.add(jLabel39);
         jLabel39.setBounds(530, 420, 70, 17);
         jPanel3.add(DateReceive1);
-        DateReceive1.setBounds(120, 420, 140, 28);
+        DateReceive1.setBounds(120, 420, 140, 29);
         jPanel3.add(txtchqno2);
         txtchqno2.setBounds(380, 420, 140, 20);
 
@@ -1280,7 +1328,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         jPanel3.add(jLabel40);
         jLabel40.setBounds(330, 420, 50, 17);
         jPanel3.add(DateCheqDate1);
-        DateCheqDate1.setBounds(600, 420, 140, 28);
+        DateCheqDate1.setBounds(600, 420, 140, 29);
 
         btchequenumber.setBackground(new java.awt.Color(204, 255, 255));
         btchequenumber.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -1335,7 +1383,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel2.add(cmbstaffcode2);
-        cmbstaffcode2.setBounds(510, 90, 250, 26);
+        cmbstaffcode2.setBounds(510, 90, 250, 29);
 
         txtAdvanceNo2.setEditable(false);
         txtAdvanceNo2.setEnabled(false);
@@ -1371,7 +1419,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel2.add(cmbcostcenter2);
-        cmbcostcenter2.setBounds(180, 90, 240, 26);
+        cmbcostcenter2.setBounds(180, 90, 240, 29);
 
         jLabel15.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel15.setText("Return Refund By");
@@ -1383,7 +1431,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         jPanel2.add(jLabel18);
         jLabel18.setBounds(12, 150, 90, 17);
         jPanel2.add(DateSettlemAccount2);
-        DateSettlemAccount2.setBounds(180, 120, 240, 28);
+        DateSettlemAccount2.setBounds(180, 120, 240, 29);
 
         btncancel2.setText("Cancel");
         btncancel2.addActionListener(new java.awt.event.ActionListener() {
@@ -1419,7 +1467,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel2.add(radioreturn3);
-        radioreturn3.setBounds(910, 70, 90, 18);
+        radioreturn3.setBounds(910, 70, 90, 27);
 
         radionormal3.setSelected(true);
         radionormal3.setText("Normal");
@@ -1429,7 +1477,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel2.add(radionormal3);
-        radionormal3.setBounds(910, 10, 80, 18);
+        radionormal3.setBounds(910, 10, 80, 27);
 
         radiosubmit3.setText("Submit");
         radiosubmit3.addActionListener(new java.awt.event.ActionListener() {
@@ -1438,7 +1486,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel2.add(radiosubmit3);
-        radiosubmit3.setBounds(910, 40, 80, 18);
+        radiosubmit3.setBounds(910, 40, 80, 27);
 
         griddetailacstep5.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1503,14 +1551,14 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         jPanel2.add(jLabel19);
         jLabel19.setBounds(10, 120, 110, 20);
         jPanel2.add(DatePlanSettlemAccount2);
-        DatePlanSettlemAccount2.setBounds(180, 50, 190, 28);
+        DatePlanSettlemAccount2.setBounds(180, 50, 190, 29);
 
         jLabel20.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel20.setText("Settlement");
         jPanel2.add(jLabel20);
         jLabel20.setBounds(380, 50, 70, 20);
         jPanel2.add(DateSettlement2);
-        DateSettlement2.setBounds(450, 50, 190, 28);
+        DateSettlement2.setBounds(450, 50, 190, 29);
 
         cmb_IT1GP_2.setEditable(false);
         jPanel2.add(cmb_IT1GP_2);
@@ -1526,7 +1574,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtamount2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtamount2.setText("0.00");
         jPanel2.add(txtamount2);
-        txtamount2.setBounds(180, 150, 120, 28);
+        txtamount2.setBounds(180, 150, 120, 29);
 
         jLabel48.setText("จำนวนเงินก่อน Vat7%");
         jPanel2.add(jLabel48);
@@ -1537,7 +1585,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtamtbfvat1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtamtbfvat1.setText("0.00");
         jPanel2.add(txtamtbfvat1);
-        txtamtbfvat1.setBounds(180, 180, 120, 28);
+        txtamtbfvat1.setBounds(180, 180, 120, 29);
 
         jLabel49.setText("Vta 7%");
         jPanel2.add(jLabel49);
@@ -1548,7 +1596,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtvat1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtvat1.setText("0.00");
         jPanel2.add(txtvat1);
-        txtvat1.setBounds(180, 210, 120, 28);
+        txtvat1.setBounds(180, 210, 120, 29);
 
         jLabel50.setText("Total Amount");
         jPanel2.add(jLabel50);
@@ -1559,7 +1607,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtamt1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtamt1.setText("0.00");
         jPanel2.add(txtamt1);
-        txtamt1.setBounds(180, 240, 120, 28);
+        txtamt1.setBounds(180, 240, 120, 29);
 
         jLabel51.setText("W/H");
         jPanel2.add(jLabel51);
@@ -1575,7 +1623,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel2.add(txtwhtax1);
-        txtwhtax1.setBounds(180, 270, 120, 28);
+        txtwhtax1.setBounds(180, 270, 120, 29);
 
         jLabel52.setText("Return to company");
         jPanel2.add(jLabel52);
@@ -1586,7 +1634,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtreturn1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtreturn1.setText("0.00");
         jPanel2.add(txtreturn1);
-        txtreturn1.setBounds(180, 300, 120, 28);
+        txtreturn1.setBounds(180, 300, 120, 29);
 
         jLabel53.setText("Claim back from company");
         jPanel2.add(jLabel53);
@@ -1597,7 +1645,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtrefund1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtrefund1.setText("0.00");
         jPanel2.add(txtrefund1);
-        txtrefund1.setBounds(180, 330, 120, 28);
+        txtrefund1.setBounds(180, 330, 120, 29);
 
         rdoPTC.setText("ไม่เกิน 1,000 บาท เบิก Petty Cash");
         rdoPTC.setEnabled(false);
@@ -1612,7 +1660,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel2.add(rdoReturnSCB);
-        rdoReturnSCB.setBounds(310, 300, 210, 18);
+        rdoReturnSCB.setBounds(310, 300, 210, 27);
 
         rdoReturnKBANK.setText("KBANK-340-2-314428");
         rdoReturnKBANK.setEnabled(false);
@@ -1622,7 +1670,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         jPanel2.add(rdoReturnKBANK);
-        rdoReturnKBANK.setBounds(530, 300, 170, 18);
+        rdoReturnKBANK.setBounds(530, 300, 170, 27);
 
         rdoTransBank.setText("เกิน 1,000 บาท โอนเข้าบัญชี");
         rdoTransBank.setEnabled(false);
@@ -1633,29 +1681,29 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtBCode.setBackground(new java.awt.Color(204, 255, 255));
         txtBCode.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jPanel2.add(txtBCode);
-        txtBCode.setBounds(700, 360, 270, 28);
+        txtBCode.setBounds(700, 360, 270, 29);
 
         txtBName.setEditable(false);
         txtBName.setBackground(new java.awt.Color(204, 255, 255));
         txtBName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jPanel2.add(txtBName);
-        txtBName.setBounds(740, 330, 230, 28);
+        txtBName.setBounds(740, 330, 230, 29);
 
         jLabel54.setText("ภาษี หัก ณ ที่จ่าย");
         jPanel2.add(jLabel54);
-        jLabel54.setBounds(800, 100, 100, 30);
+        jLabel54.setBounds(780, 110, 100, 30);
 
         radiotaxchec_1.setForeground(new java.awt.Color(255, 0, 51));
         radiotaxchec_1.setText(" หักหน้าเช็ค");
         radiotaxchec_1.setEnabled(false);
         jPanel2.add(radiotaxchec_1);
-        radiotaxchec_1.setBounds(910, 100, 110, 30);
+        radiotaxchec_1.setBounds(910, 140, 110, 30);
 
         radiofrontwork_1.setForeground(new java.awt.Color(255, 0, 0));
         radiofrontwork_1.setText(" หักหน้างาน");
         radiofrontwork_1.setEnabled(false);
         jPanel2.add(radiofrontwork_1);
-        radiofrontwork_1.setBounds(910, 130, 110, 30);
+        radiofrontwork_1.setBounds(910, 170, 110, 30);
 
         jLabel43.setText("Name");
         jPanel2.add(jLabel43);
@@ -1678,7 +1726,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         radionontax_1.setText("ไม่หักภาษี ณ ที่จ่าย");
         radionontax_1.setEnabled(false);
         jPanel2.add(radionontax_1);
-        radionontax_1.setBounds(910, 160, 130, 18);
+        radionontax_1.setBounds(890, 110, 130, 27);
 
         jTabbedPane1.addTab("Cash Advance Settlement", jPanel2);
 
@@ -1774,7 +1822,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         panel1.add(radioreturn4);
-        radioreturn4.setBounds(920, 70, 80, 18);
+        radioreturn4.setBounds(920, 70, 80, 27);
 
         radionormal4.setSelected(true);
         radionormal4.setText("Normal");
@@ -1784,7 +1832,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         panel1.add(radionormal4);
-        radionormal4.setBounds(920, 10, 70, 18);
+        radionormal4.setBounds(920, 10, 70, 27);
 
         radiosubmit4.setText("Submit");
         radiosubmit4.addActionListener(new java.awt.event.ActionListener() {
@@ -1793,7 +1841,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         panel1.add(radiosubmit4);
-        radiosubmit4.setBounds(920, 40, 70, 18);
+        radiosubmit4.setBounds(920, 40, 70, 27);
 
         griddetailacstep6.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1843,18 +1891,18 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         panel1.add(jScrollPane2);
         jScrollPane2.setBounds(10, 400, 990, 120);
         panel1.add(DatePlanSettlemAccount3);
-        DatePlanSettlemAccount3.setBounds(150, 50, 190, 28);
+        DatePlanSettlemAccount3.setBounds(150, 50, 190, 29);
 
         jLabel61.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel61.setText("Settlement");
         panel1.add(jLabel61);
         jLabel61.setBounds(350, 50, 70, 20);
         panel1.add(DateSettlement3);
-        DateSettlement3.setBounds(420, 50, 190, 28);
+        DateSettlement3.setBounds(420, 50, 190, 29);
 
         cmb_IT1GP_3.setEditable(false);
         panel1.add(cmb_IT1GP_3);
-        cmb_IT1GP_3.setBounds(150, 120, 640, 28);
+        cmb_IT1GP_3.setBounds(150, 120, 640, 29);
 
         jLabel62.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel62.setText("Expenses Group");
@@ -1866,7 +1914,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtamount3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtamount3.setText("0.00");
         panel1.add(txtamount3);
-        txtamount3.setBounds(150, 150, 120, 28);
+        txtamount3.setBounds(150, 150, 120, 29);
 
         jLabel63.setText("จำนวนเงินก่อน Vat7%");
         panel1.add(jLabel63);
@@ -1877,7 +1925,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtamtbfvat2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtamtbfvat2.setText("0.00");
         panel1.add(txtamtbfvat2);
-        txtamtbfvat2.setBounds(150, 180, 120, 28);
+        txtamtbfvat2.setBounds(150, 180, 120, 29);
 
         jLabel64.setText("Vta 7%");
         panel1.add(jLabel64);
@@ -1888,7 +1936,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtvat2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtvat2.setText("0.00");
         panel1.add(txtvat2);
-        txtvat2.setBounds(150, 210, 120, 28);
+        txtvat2.setBounds(150, 210, 120, 29);
 
         jLabel65.setText("Total Amount");
         panel1.add(jLabel65);
@@ -1899,7 +1947,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtamt2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtamt2.setText("0.00");
         panel1.add(txtamt2);
-        txtamt2.setBounds(150, 240, 120, 28);
+        txtamt2.setBounds(150, 240, 120, 29);
 
         jLabel66.setText("W/H");
         panel1.add(jLabel66);
@@ -1915,7 +1963,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         panel1.add(txtwhtax2);
-        txtwhtax2.setBounds(150, 270, 120, 28);
+        txtwhtax2.setBounds(150, 270, 120, 29);
 
         jLabel67.setText("Return to company");
         panel1.add(jLabel67);
@@ -1926,7 +1974,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtreturn2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtreturn2.setText("0.00");
         panel1.add(txtreturn2);
-        txtreturn2.setBounds(150, 300, 120, 28);
+        txtreturn2.setBounds(150, 300, 120, 29);
 
         jLabel68.setText("Refund from company");
         panel1.add(jLabel68);
@@ -1937,7 +1985,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtrefund2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtrefund2.setText("0.00");
         panel1.add(txtrefund2);
-        txtrefund2.setBounds(150, 330, 120, 28);
+        txtrefund2.setBounds(150, 330, 120, 29);
 
         rdoPTC1.setText("ไม่เกิน 1,000 บาท เบิก Petty Cash");
         rdoPTC1.setEnabled(false);
@@ -1952,7 +2000,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         panel1.add(rdoReturnSCB1);
-        rdoReturnSCB1.setBounds(280, 300, 210, 18);
+        rdoReturnSCB1.setBounds(280, 300, 210, 27);
 
         rdoReturnKBANK1.setText("KBANK-340-2-314428");
         rdoReturnKBANK1.setEnabled(false);
@@ -1962,7 +2010,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         panel1.add(rdoReturnKBANK1);
-        rdoReturnKBANK1.setBounds(500, 300, 170, 18);
+        rdoReturnKBANK1.setBounds(500, 300, 170, 27);
 
         rdoTransBank1.setText("เกิน 1,000 บาท โอนเข้าบัญชี");
         rdoTransBank1.setEnabled(false);
@@ -1973,13 +2021,13 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         txtBCode1.setBackground(new java.awt.Color(204, 255, 255));
         txtBCode1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         panel1.add(txtBCode1);
-        txtBCode1.setBounds(670, 360, 270, 28);
+        txtBCode1.setBounds(670, 360, 270, 29);
 
         txtBName1.setEditable(false);
         txtBName1.setBackground(new java.awt.Color(204, 255, 255));
         txtBName1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         panel1.add(txtBName1);
-        txtBName1.setBounds(710, 330, 230, 28);
+        txtBName1.setBounds(710, 330, 230, 29);
 
         jLabel69.setText("ภาษี หัก ณ ที่จ่าย");
         panel1.add(jLabel69);
@@ -2017,11 +2065,11 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
         });
         panel1.add(cmbcostcenter3);
-        cmbcostcenter3.setBounds(150, 90, 260, 28);
+        cmbcostcenter3.setBounds(150, 90, 260, 29);
 
         cmbstaffcode3.setEditable(false);
         panel1.add(cmbstaffcode3);
-        cmbstaffcode3.setBounds(490, 90, 300, 28);
+        cmbstaffcode3.setBounds(490, 90, 300, 29);
 
         radiofrontwork_2.setForeground(new java.awt.Color(255, 0, 0));
         radiofrontwork_2.setText(" หักหน้างาน");
@@ -2032,7 +2080,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         jTabbedPane2.addTab("Cash Advance Check Settlement", panel1);
 
         getContentPane().add(jTabbedPane2);
-        jTabbedPane2.setBounds(950, 0, 100, 30);
+        jTabbedPane2.setBounds(950, 0, 100, 41);
 
         setSize(new java.awt.Dimension(1073, 817));
         setLocationRelativeTo(null);
@@ -2117,6 +2165,16 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
 
         String CASH_STAT = "";
 
+        if (!radiofrontpaytoemployeeAccountant.isSelected() && !radiofrontpaytosupplierAccountant.isSelected()) {
+            msbox("Please choose Payto / จ่ายให้ type");
+            return;
+        }
+        String payto = "";
+        if (radiofrontpaytoemployeeAccountant.isSelected()) {
+            payto = "Employee";
+        } else {
+            payto = "Supplier";
+        }
         if (CheckDataStep2ToSave() == false) {
             msbox("Please Check Data");
             return;
@@ -2155,7 +2213,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
             }
 
             if (!CASH_CANO.isEmpty()) {
-                setdata.SaveCashAdvanceAccountStep1Form(CASH_CANO, CASH_TRAD, CASH_CHEB, CASH_STAT);
+                setdata.SaveCashAdvanceAccountStep1Form(CASH_CANO, CASH_TRAD, CASH_CHEB, CASH_STAT, payto);
             }
             if (CASH_CANO != "" && !CASH_CANO.isEmpty()) {
                 SubmitforAccounting sbacc = new SubmitforAccounting();
@@ -2173,7 +2231,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
                     String settdate = ccdp.GetDateFormatSetsubmitacc(DateSettlement.getDate());
 
                     if (radionontax.isSelected()) {
-                        sbacc.callARS100(Advance, cusNO, amt, accdate, settdate, remark); // submitforacc
+                        sbacc.callARS100(Advance, cusNO, amt, accdate, settdate, remark, payto); // submitforacc
 
 //                        try {
 //                            ResultSet rsl = cgd.GetAdvanceDetailM3(Advance);
@@ -2224,10 +2282,9 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
 //                        } catch (Exception ex) {
 //                            Logger.getLogger(CashAdvanAccounting.class.getName()).log(Level.SEVERE, null, ex);
 //                        }
-
                     } else {
 // call ars100           
-                        sbacc.callARS100(Advance, cusNO, amt, accdate, settdate, remark); // submitforacc 
+                        sbacc.callARS100(Advance, cusNO, amt, accdate, settdate, remark, payto); // submitforacc 
                     }
 
                     Set_ActiveStep1(false);
@@ -2425,9 +2482,18 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
 
             String CASH_REAMT = "0.00";
             String CASH_RETOBANK = "";
-            String WHTAXTYPE = "";
+//            String WHTAXTYPE = "";
 
-            WHTAXTYPE = txtwhtax1.getText().trim();
+//            WHTAXTYPE = txtwhtax1.getText().trim();
+            String WHTAXTYPE = "0";
+
+            if (radiotaxchec_1.isSelected() == true) {
+                WHTAXTYPE = "1";
+            }
+            if (radiofrontwork_1.isSelected() == true) {
+                WHTAXTYPE = "2";
+            }
+
             if (rdoReturnSCB.isSelected() == true) {
                 CASH_REAMT = txtreturn1.getText().trim();
                 CASH_RETOBANK = "SCB";
@@ -3122,6 +3188,20 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_radionontax_2ActionPerformed
 
+    private void radiofrontpaytoemployeeAccountantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiofrontpaytoemployeeAccountantActionPerformed
+        // TODO add your handling code here:
+        if (radiofrontpaytoemployeeAccountant.isSelected()) {
+            radiofrontpaytosupplierAccountant.setSelected(!radiofrontpaytoemployeeAccountant.isSelected());
+        }
+    }//GEN-LAST:event_radiofrontpaytoemployeeAccountantActionPerformed
+
+    private void radiofrontpaytosupplierAccountantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiofrontpaytosupplierAccountantActionPerformed
+        // TODO add your handling code here:
+        if (radiofrontpaytosupplierAccountant.isSelected()) {
+            radiofrontpaytoemployeeAccountant.setSelected(!radiofrontpaytosupplierAccountant.isSelected());
+        }
+    }//GEN-LAST:event_radiofrontpaytosupplierAccountantActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -3272,6 +3352,7 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel71;
     private javax.swing.JLabel jLabel72;
     private javax.swing.JLabel jLabel73;
+    private javax.swing.JLabel jLabel74;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -3290,6 +3371,8 @@ public class CashAdvanAccounting extends javax.swing.JFrame {
     private javax.swing.JRadioButton radio_transfer;
     private javax.swing.JRadioButton radiocancel;
     private javax.swing.JRadioButton radiocancel1;
+    public static javax.swing.JRadioButton radiofrontpaytoemployeeAccountant;
+    public static javax.swing.JRadioButton radiofrontpaytosupplierAccountant;
     public static javax.swing.JRadioButton radiofrontwork;
     public static javax.swing.JRadioButton radiofrontwork_1;
     public static javax.swing.JRadioButton radiofrontwork_2;

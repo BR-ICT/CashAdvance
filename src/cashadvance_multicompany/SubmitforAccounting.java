@@ -152,7 +152,7 @@ public class SubmitforAccounting {
 //        }
 //
 //    }
-    public void callARS100(String Advance, String cusNO, String amt, String accdate, String settdate, String remark) {
+    public void callARS100(String Advance, String cusNO, String amt, String accdate, String settdate, String remark, String payto) {
 
         try {
 
@@ -221,6 +221,7 @@ public class SubmitforAccounting {
                 mne.setField("WWDUDT", settdate); //due
                 mne.setField("WWAIT4", cusNO); //cus
                 mne.setField("WWAIT5", subAdvance); //advno
+                mne.setField("WWAIT6", payto); //advno
 
                 mne.pressKey(MNEProtocol.KeyEnter);
                 System.out.println(mne.getMsg());
@@ -252,6 +253,7 @@ public class SubmitforAccounting {
                 mne.setField("WWCUAM", "-" + amt);
                 mne.setField("WWQTTP", "1"); //1
                 mne.setField("WXAIT5", subAdvance);
+                mne.setField("WXAIT6", payto);
                 mne.setField("WXAIT1", "8AA1301");
                 mne.setField("WXAIT4", cusNO);
 
@@ -753,7 +755,7 @@ public class SubmitforAccounting {
     }
 
     public String callAPS100(Double VAT_C, Double VAT_UC, String SETT_COST, String SETT_AMTB, String ACCODE, String InvNO, String DateAccountSettle, String InvDate, String InvAmt,
-            String InvSupp, String GenVoucherText, String SETT_DUEDATE, String EATX40, String VATCODE, String Advance, String ServiceCode, String StaffCode) throws Exception {
+            String InvSupp, String GenVoucherText, String SETT_DUEDATE, String EATX40, String VATCODE, String Advance, String ServiceCode, String StaffCode, String payto) throws Exception {
         String msg = "";
         MNEHelper mne = new MNEHelper(LoginAppServer, LoginAppPort, LoginUrlConnectionM3);
         mne.logInToM3(Integer.valueOf(LoginCono), LoginDivision, UserM3, PasswordM3);
@@ -891,7 +893,7 @@ public class SubmitforAccounting {
                 mne.setField("WXAIT1", ACCODE);//6BC9905
                 mne.setField("WXAIT4", StaffCode);//6BC9905
                 mne.setField("WXAIT5", Advance);
-                mne.setField("WXAIT6", "*BLANK");
+                mne.setField("WXAIT6", payto);
                 mne.setField("FCS", "WWCUAM");
                 mne.setField("WWSERS", ServiceCode); // Scd   21
                 mne.setField("WWVTCD", VATCODE); //40
@@ -907,7 +909,7 @@ public class SubmitforAccounting {
                 mne.setField("WXAIT2", SETT_COST);//s8
                 mne.setField("WXAIT4", StaffCode);//6BC9905
                 mne.setField("WXAIT5", Advance);
-                mne.setField("WXAIT6", "*BLANK");
+                mne.setField("WXAIT6", payto);
                 mne.setField("WWCUAM", VAT_UC);//59.68
                 mne.setField("WWQTTP", "1");
                 mne.setField("WWSERS", ""); // Scd   21

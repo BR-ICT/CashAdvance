@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cashadvanceAccountingVoucher" language="groovy" pageWidth="1008" pageHeight="595" orientation="Landscape" columnWidth="972" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" uuid="de58401a-5e9a-4a03-89ff-52ed34e1180c">
 	<property name="ireport.zoom" value="1.9487171000000267"/>
 	<property name="ireport.x" value="0"/>
@@ -7,8 +6,6 @@
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DB2"/>
-	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="CompannyName" class="java.lang.String"/>
 	<parameter name="ReceiveDateAt" class="java.lang.String">
 		<defaultValueExpression><![CDATA["20201208"]]></defaultValueExpression>
@@ -23,7 +20,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[	SELECT a.*,b.eatx40
+		<![CDATA[SELECT a.*,b.eatx40
 	FROM (
 	select cash_empy,cash_pps1,SUBSTR(cash_reda,7,2) CONCAT '/'CONCAT SUBSTR(cash_reda,5,2) CONCAT '/' CONCAT SUBSTR(cash_reda,1,4) as cash_reda
   	,SUBSTR(cash_dued,7,2) CONCAT '/' CONCAT SUBSTR(cash_dued,5,2) CONCAT '/'  CONCAT SUBSTR(cash_dued,1,4) as cash_dued
@@ -32,8 +29,8 @@
  	,idsunm,cash_cano,CASH_COST
  	,DAYS (date(SUBSTR(cash_stdp,1,4) CONCAT '-' CONCAT SUBSTR(cash_stdp,5,2) CONCAT '-' CONCAT SUBSTR(cash_stdp,7,2)))-days
 	(date(SUBSTR($P!{ReceiveDateAt},1,4) CONCAT '-' CONCAT SUBSTR($P!{ReceiveDateAt},5,2) CONCAT '-' CONCAT SUBSTR($P!{ReceiveDateAt},7,2))) as overdate
- 	,SUBSTR(VARCHAR(current date),1,3)CONCAT SUBSTR(VARCHAR(current date),4,2) CONCAT '/'CONCAT SUBSTR(VARCHAR(current date),7,2) as sysdate,CASH_PAYTO
- 	from  BRLDTABK01.FIN_CASHADALL, M3FDBPRD.CIDMAS, sysibm.sysdummy1
+ 	,SUBSTR(VARCHAR(current date),1,3)CONCAT SUBSTR(VARCHAR(current date),4,2) CONCAT '/'CONCAT SUBSTR(VARCHAR(current date),7,2) as sysdate
+ 	from  BRLDTA0100.FIN_CASHADALL, M3FDBPRD.CIDMAS, sysibm.sysdummy1
  	LEFT JOIN ( SELECT current date as sysdate FROM sysibm.sysdummy1 ) as d ON 1=1
  	WHERE CASH_CONO = $P{cono}
  	AND CASH_DIVI = $P{divi}
@@ -51,62 +48,19 @@
 	) B  ON B.eaaitm = A.cash_cost
 	ORDER BY CASH_CANO asc]]>
 	</queryString>
-	<field name="CASH_EMPY" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="CASH_EMPY"/>
-		<property name="com.jaspersoft.studio.field.label" value="CASH_EMPY"/>
-	</field>
-	<field name="CASH_PPS1" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="CASH_PPS1"/>
-		<property name="com.jaspersoft.studio.field.label" value="CASH_PPS1"/>
-	</field>
-	<field name="CASH_REDA" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="CASH_REDA"/>
-		<property name="com.jaspersoft.studio.field.label" value="CASH_REDA"/>
-	</field>
-	<field name="CASH_DUED" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="CASH_DUED"/>
-		<property name="com.jaspersoft.studio.field.label" value="CASH_DUED"/>
-	</field>
-	<field name="CASH_STDP" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="CASH_STDP"/>
-		<property name="com.jaspersoft.studio.field.label" value="CASH_STDP"/>
-	</field>
-	<field name="CASH_AMT" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="CASH_AMT"/>
-		<property name="com.jaspersoft.studio.field.label" value="CASH_AMT"/>
-	</field>
-	<field name="CASH_DATE" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="CASH_DATE"/>
-		<property name="com.jaspersoft.studio.field.label" value="CASH_DATE"/>
-	</field>
-	<field name="IDSUNM" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="IDSUNM"/>
-		<property name="com.jaspersoft.studio.field.label" value="IDSUNM"/>
-	</field>
-	<field name="CASH_CANO" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="CASH_CANO"/>
-		<property name="com.jaspersoft.studio.field.label" value="CASH_CANO"/>
-	</field>
-	<field name="CASH_COST" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="CASH_COST"/>
-		<property name="com.jaspersoft.studio.field.label" value="CASH_COST"/>
-	</field>
-	<field name="OVERDATE" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="OVERDATE"/>
-		<property name="com.jaspersoft.studio.field.label" value="OVERDATE"/>
-	</field>
-	<field name="SYSDATE" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="SYSDATE"/>
-		<property name="com.jaspersoft.studio.field.label" value="SYSDATE"/>
-	</field>
-	<field name="CASH_PAYTO" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="CASH_PAYTO"/>
-		<property name="com.jaspersoft.studio.field.label" value="CASH_PAYTO"/>
-	</field>
-	<field name="EATX40" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="EATX40"/>
-		<property name="com.jaspersoft.studio.field.label" value="EATX40"/>
-	</field>
+	<field name="CASH_EMPY" class="java.lang.String"/>
+	<field name="CASH_PPS1" class="java.lang.String"/>
+	<field name="CASH_REDA" class="java.lang.String"/>
+	<field name="CASH_DUED" class="java.lang.String"/>
+	<field name="CASH_STDP" class="java.lang.String"/>
+	<field name="CASH_AMT" class="java.math.BigDecimal"/>
+	<field name="CASH_DATE" class="java.lang.String"/>
+	<field name="IDSUNM" class="java.lang.String"/>
+	<field name="CASH_CANO" class="java.math.BigDecimal"/>
+	<field name="CASH_COST" class="java.lang.String"/>
+	<field name="OVERDATE" class="java.lang.Integer"/>
+	<field name="SYSDATE" class="java.lang.String"/>
+	<field name="EATX40" class="java.lang.String"/>
 	<variable name="PageTotal" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
@@ -204,7 +158,7 @@
 				<text><![CDATA[Adv No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="692" y="0" width="54" height="22" uuid="24408574-c0ef-46ed-bf50-aebdf7e03c5a"/>
+				<reportElement x="568" y="0" width="54" height="22" uuid="24408574-c0ef-46ed-bf50-aebdf7e03c5a"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -218,7 +172,7 @@
 				<text><![CDATA[Chq Date.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="801" y="0" width="52" height="22" uuid="e97bbbcf-d1c8-4bdf-9c28-fbd985f56099"/>
+				<reportElement x="677" y="0" width="52" height="22" uuid="e97bbbcf-d1c8-4bdf-9c28-fbd985f56099"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -232,9 +186,7 @@
 				<text><![CDATA[Plan Set.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="502" y="0" width="190" height="11" uuid="72f56efe-0675-488a-b014-e75cd3628f22">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
+				<reportElement x="847" y="0" width="69" height="22" uuid="72f56efe-0675-488a-b014-e75cd3628f22"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -243,12 +195,12 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="853" y="0" width="79" height="22" uuid="83bbffb6-12d1-4fd6-8f6e-599b62e7e0ee"/>
+				<reportElement x="729" y="0" width="79" height="22" uuid="83bbffb6-12d1-4fd6-8f6e-599b62e7e0ee"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -262,7 +214,7 @@
 				<text><![CDATA[OVERDUE_NOT OVER]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="746" y="0" width="55" height="22" uuid="be8995f3-f768-4a50-9339-61f9845e69bd"/>
+				<reportElement x="622" y="0" width="55" height="22" uuid="be8995f3-f768-4a50-9339-61f9845e69bd"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -290,7 +242,21 @@
 				<text><![CDATA[Department]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="932" y="0" width="39" height="22" uuid="3dd398d4-7d97-4bf3-9d13-1e5d91980b98"/>
+				<reportElement x="502" y="0" width="66" height="22" uuid="fc6d2752-0b7c-4da7-85ea-e407f2abcf73"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Req Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="808" y="0" width="39" height="22" uuid="3dd398d4-7d97-4bf3-9d13-1e5d91980b98"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -302,40 +268,6 @@
 					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Date]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="502" y="11" width="95" height="11" uuid="64e84609-76d9-4275-b541-ab627342697c">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[ADVANCE TO EMPLOYEE]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="597" y="11" width="95" height="11" uuid="36902712-314b-4eb3-899b-1e42f8464a51">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[DIRECT TO SUPPLIER]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -400,7 +332,7 @@
 				<textFieldExpression><![CDATA[$F{CASH_CANO}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="692" y="0" width="54" height="16" uuid="cfe83758-adf7-4004-bae4-08fdce427ec6"/>
+				<reportElement x="568" y="0" width="54" height="16" uuid="cfe83758-adf7-4004-bae4-08fdce427ec6"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -414,7 +346,7 @@
 				<textFieldExpression><![CDATA[$F{CASH_DUED}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="801" y="0" width="52" height="16" uuid="ec41fa00-4572-496a-9d66-7cb16898f225"/>
+				<reportElement x="677" y="0" width="52" height="16" uuid="ec41fa00-4572-496a-9d66-7cb16898f225"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -428,9 +360,7 @@
 				<textFieldExpression><![CDATA[$F{CASH_STDP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="502" y="0" width="95" height="16" uuid="524cea33-0c03-4c36-b419-1c542158ecbd">
-					<printWhenExpression><![CDATA[$F{CASH_PAYTO}.equals("Employee") || !$F{CASH_PAYTO}.equals("Supplier") ]]></printWhenExpression>
-				</reportElement>
+				<reportElement x="847" y="0" width="69" height="16" uuid="524cea33-0c03-4c36-b419-1c542158ecbd"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -445,7 +375,7 @@
 				<textFieldExpression><![CDATA[$F{CASH_AMT}]]></textFieldExpression>
 			</textField>
 			<textField pattern="">
-				<reportElement x="932" y="0" width="39" height="16" uuid="c9f5389a-97be-4975-80f3-fa23ec13b23c"/>
+				<reportElement x="808" y="0" width="39" height="16" uuid="c9f5389a-97be-4975-80f3-fa23ec13b23c"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -459,7 +389,7 @@
 				<textFieldExpression><![CDATA[$F{OVERDATE}.toString().replace("-","")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="746" y="0" width="55" height="16" uuid="bb5437eb-6a8a-4aba-a770-8ece09ce4190"/>
+				<reportElement x="622" y="0" width="55" height="16" uuid="bb5437eb-6a8a-4aba-a770-8ece09ce4190"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -502,8 +432,22 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{EATX40}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="502" y="0" width="66" height="16" uuid="80fec564-a853-4c08-83a3-e2c43cce9b87"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CASH_DATE}]]></textFieldExpression>
+			</textField>
 			<textField pattern="">
-				<reportElement x="853" y="0" width="79" height="16" uuid="e7c1d06f-5d34-4d01-b6f8-f73fecabfa68"/>
+				<reportElement x="729" y="0" width="79" height="16" uuid="e7c1d06f-5d34-4d01-b6f8-f73fecabfa68"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -515,38 +459,6 @@
 					<font fontName="TH SarabunPSK" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{OVERDATE} < 0 ? "Overdue" : "Not Overdue")]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00">
-				<reportElement x="597" y="0" width="95" height="16" uuid="0b6d8f5e-481b-4639-8749-49d2ef9a60e4">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<printWhenExpression><![CDATA[$F{CASH_PAYTO}.equals("Supplier") ]]></printWhenExpression>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="TH SarabunPSK" size="12"/>
-					<paragraph rightIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{CASH_AMT}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="597" y="0" width="95" height="16" uuid="d803b941-f880-4d41-b466-5ffd9212cc05">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.5"/>
-				</box>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="502" y="0" width="95" height="16" uuid="3e3020d5-be96-4cfd-9b64-9a2de3df3770"/>
-				<box>
-					<pen lineWidth="0.5"/>
-				</box>
 			</textField>
 		</band>
 	</detail>
@@ -566,7 +478,7 @@
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<textField pattern="#,##0.00">
-				<reportElement x="584" y="0" width="108" height="17" uuid="a0424719-a25f-465b-9c5b-5040ce28cbae"/>
+				<reportElement x="808" y="0" width="108" height="17" uuid="a0424719-a25f-465b-9c5b-5040ce28cbae"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="12"/>
 				</textElement>

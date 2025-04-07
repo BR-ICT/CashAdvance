@@ -30,6 +30,7 @@ public class frmsearch extends javax.swing.JFrame {
 
     public static DefaultTableModel model;
     public static String ProgramStep = "";
+    public static String Payto = "";
 
     /**
      * Creates new form frmsearch
@@ -115,7 +116,7 @@ public class frmsearch extends javax.swing.JFrame {
         if (ProgramStep.equals("cashadvstepWHTAX") || ProgramStep.equals("cashadvstep2")) {
             GetSupplier_INVC(txtsearch.getText().trim());
         } else {
-            GetSupplier(txtsearch.getText().trim());
+            GetSupplier(txtsearch.getText().trim(),Payto);
         }
 
     }//GEN-LAST:event_btnSearchsuppActionPerformed
@@ -250,11 +251,11 @@ public class frmsearch extends javax.swing.JFrame {
         });
     }
 
-    public void GetSupplier(String searchlike) {
+    public void GetSupplier(String searchlike,String payto) {
 
         SetModel();
         Classgetdata cgr = new Classgetdata();
-        ResultSet rs1 = cgr.GetSupplierResultwithsearchData(searchlike);
+        ResultSet rs1 = cgr.GetSupplierResultwithsearchData(searchlike,payto);
 
         try {
             while (rs1.next()) {
@@ -294,7 +295,7 @@ public class frmsearch extends javax.swing.JFrame {
 
         SetModel();
         Classgetdata cgr = new Classgetdata();
-        ResultSet rs1 = cgr.GetSupplierResultDatashow();
+        ResultSet rs1 = cgr.GetSupplierResultDatashow(Payto);
 
         try {
             while (rs1.next()) {

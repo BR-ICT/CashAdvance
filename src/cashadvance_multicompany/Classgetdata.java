@@ -198,8 +198,24 @@ public class Classgetdata {
         return null;
     }
 
-    public ResultSet GetSupplierResultwithsearchData(String searchlike) {
+    public ResultSet GetSupplierResultwithsearchData(String searchlike, String payto) {
         try {
+            String codefilter1 = "";
+            if (payto.equals("Employee")) {
+                codefilter1 = " AND substring(IRSUNO,1,4) = '1216'\n";
+            } else if (payto.equals("Supplier")) {
+                codefilter1 = "AND (substring(IRSUNO,1,2) in ('10','11','20') \n"
+                        + " OR (substring(IRSUNO,1,2) in ('12') AND substring(IRSUNO,3,2) != '16')) \n";
+            }
+            String codefilter2 = "";
+
+            if (payto.equals("Employee")) {
+                codefilter2 = " AND substring(IDSUNO,1,4) = '1216'\n";
+            } else if (payto.equals("Supplier")) {
+                codefilter2 = "AND (substring(IDSUNO,1,2) in ('10','11','20') \n"
+                        + " OR (substring(IDSUNO,1,2) in ('12') AND substring(IDSUNO,3,2) != '16')) \n";
+            }
+
             ResultSet rsl = null;
             Connection conn = ConnectionDB();
             Statement sta = conn.createStatement();
@@ -217,6 +233,7 @@ public class Classgetdata {
                     + " AND IICONO = IRCONO\n"
                     + " AND IRSUCM NOT IN ('','-')\n"
                     + " and (UPPER(IDSUNO) Like '%" + UpperSearch + "%' OR UPPER(IDSUNM) Like '%" + UpperSearch + "%') \n"
+                    +  codefilter1
                     + " ORDER BY IDSUNO";
             boolean count = checkRsl(Sql1);
             if (count == true) {
@@ -227,6 +244,7 @@ public class Classgetdata {
                         + " FROM M3FDBPRD.CIDMAS\n"
                         + " where  idstat = '20' AND idcono='" + LoginCono.trim() + "'\n"
                         + " and (UPPER(IDSUNO) Like '%" + UpperSearch + "%' OR UPPER(IDSUNM) Like '%" + UpperSearch + "%') \n"
+                        + codefilter2
                         + " Order by idsuno \n"
                         + "LIMIT 0,100 ";
                 rsl = sta.executeQuery(Sql1);
@@ -310,9 +328,16 @@ public class Classgetdata {
 //        }
 //        return null;
 //    }
-    public ResultSet GetSupplierResultDatashow() {
+    public ResultSet GetSupplierResultDatashow(String payto) {
         try {
-
+            String codefilter = "";
+            System.out.println(payto);
+            if (payto.equals("Employee")) {
+                codefilter = " AND substring(IDSUNO,1,4) = '1216'\n";
+            } else if (payto.equals("Supplier")) {
+                codefilter = "AND (substring(IDSUNO,1,2) in ('10','11','20') \n"
+                        + " OR (substring(IDSUNO,1,2) in ('12') AND substring(IDSUNO,3,2) != '16')) \n";
+            }
             Connection conn = ConnectionDB();
             Statement sta = conn.createStatement();
             String Sql1 = "SELECT IRSUNO,IRYRE1,IRPHNO,IRTFNO,IRSUCM,IDSUNM,IDSUNO,IIOUCN\n"
@@ -326,8 +351,10 @@ public class Classgetdata {
                     + " AND IISUNO = IDSUNO\n"
                     + " AND IICONO = IDCONO\n"
                     + " AND IICONO = IRCONO\n"
-                    + " AND IIOUCN != ''\n"
+                    //Not sure what this is but i will disble this line for the time being
+                    //                    + " AND IIOUCN != ''\n"
                     + " AND IRSUCM NOT IN ('','-')\n"
+                    + codefilter + "\n"
                     //                    + " and (UPPER(IDSUNO) Like '%WEET%' OR UPPER(IDSUNM) Like '%WEET%') \n"
                     + " ORDER BY IDSUNO\n"
                     + " LIMIT 0,50 ";
@@ -533,10 +560,10 @@ public class Classgetdata {
 
             Connection conn = ConnectionDB();
             Statement sta = conn.createStatement();
-            String Sql1 = "select *   ";
-            Sql1 += " FROM  " + Table_fin_caadd;
-            Sql1 += " where CASH_CANO='" + CASH_CANO_ + "'";
-            Sql1 += " AND CASH_CONO = '" + LoginCono.trim() + "' AND CASH_DIVI = '" + LoginDivision.trim() + "'\n";
+                String Sql1 = "select *   ";
+                Sql1 += " FROM  " + Table_fin_caadd;
+                Sql1 += " where CASH_CANO='" + CASH_CANO_ + "'";
+                Sql1 += " AND CASH_CONO = '" + LoginCono.trim() + "' AND CASH_DIVI = '" + LoginDivision.trim() + "'\n";
             ResultSet rs1 = sta.executeQuery(Sql1);
             return rs1;
         } catch (Exception ex) {

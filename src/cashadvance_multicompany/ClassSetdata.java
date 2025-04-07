@@ -107,7 +107,7 @@ public class ClassSetdata {
             String CASH_OPDT, String CASH_PPS1, String CASH_PPS2,
             String CASH_PPS3, double CASH_AMT, String CASH_REDP,
             String CASH_STDP, String REF_PO, String CASH_REQB, String CASH_STAT, String CASH_PAYSUP,
-            String CASH_CONO, String CASH_DIVI, String CASH_EXPGP, String CASH_WHTAX_TYPE, String PO_NO, String CASH_PAYT) {
+            String CASH_CONO, String CASH_DIVI, String CASH_EXPGP, String CASH_WHTAX_TYPE, String PO_NO, String CASH_PAYT, String payto) {
 
         try {
 
@@ -134,14 +134,14 @@ public class ClassSetdata {
                 StrInsertHeader += "  CASH_PPS3, CASH_OPDF, CASH_OPDT,"
                         + "         CASH_REDP, CASH_STDP, CASH_AMT, ";
                 StrInsertHeader += "  CASH_REQB, CASH_STAT,CASH_REF1, CASH_REF3, "
-                        + "CASH_CONO, CASH_DIVI, CASH_EXPG, CASH_PAYSUP, CASH_WHTYPE, CASH_RETOBANK , CASH_PAYT , CASH_WHTAX) ";
+                        + "CASH_CONO, CASH_DIVI, CASH_EXPG, CASH_PAYSUP, CASH_WHTYPE, CASH_RETOBANK , CASH_PAYT , CASH_WHTAX, CASH_PAYTO) ";
 
                 StrInsertHeader += "VALUES ('" + CASH_CANO + "','" + CASH_DATE + "','" + CASH_EMPY + "', "
                         + "'" + CASH_COST + "','" + CASH_PPS1.trim().replace("'", "") + "','" + CASH_PPS2.trim().replace("'", "") + "', "
                         + "'" + CASH_PPS3.trim().replace("'", "") + "','" + CASH_OPDF + "','" + CASH_OPDT + "', "
                         + CASH_REDP + "," + CASH_STDP + ",'" + CASH_AMT + "', "
                         + "'" + CASH_REQB.toUpperCase().trim() + "','" + CASH_STAT + "','" + REF_PO + "' , '" + PO_NO + "' "
-                        + ",'" + CASH_CONO + "','" + CASH_DIVI + "','" + CASH_EXPGP.trim() + "','" + CASH_PAYSUP + "','" + CASH_WHTAX_TYPE.trim() + "',' ', '" + CASH_PAYT.trim() + "','0.00')";
+                        + ",'" + CASH_CONO + "','" + CASH_DIVI + "','" + CASH_EXPGP.trim() + "','" + CASH_PAYSUP + "','" + CASH_WHTAX_TYPE.trim() + "',' ', '" + CASH_PAYT.trim() + "','0.00','" + payto + "')";
                 InsertHeader = conn.prepareStatement(StrInsertHeader);
                 InsertHeader.executeUpdate(StrInsertHeader);
                 System.out.println(StrInsertHeader);
@@ -153,7 +153,7 @@ public class ClassSetdata {
                         + "SET CASH_DATE= '" + CASH_DATE.trim() + "', CASH_EMPY='" + CASH_EMPY + "', CASH_COST='" + CASH_COST + "', CASH_PPS1='" + CASH_PPS1 + "', CASH_PPS2='" + CASH_PPS2 + "',"
                         + " CASH_PPS3='" + CASH_PPS3 + "',CASH_EXPG='" + CASH_EXPGP + "', CASH_PAYSUP='" + CASH_PAYSUP + "', CASH_WHTYPE ='" + CASH_WHTAX_TYPE + "', CASH_OPDF='" + CASH_OPDF + "',"
                         + " CASH_OPDT= '" + CASH_OPDT + "', CASH_REDP= '" + CASH_REDP + "', CASH_STDP= '" + CASH_STDP + "', CASH_AMT='" + CASH_AMT + "', "
-                        + " CASH_STAT='" + CASH_STAT + "', CASH_REF1 = '" + REF_PO + "' , CASH_REF3 = '" + PO_NO.trim() + "' , CASH_PAYT = '" + CASH_PAYT.trim() + "'\n"
+                        + " CASH_STAT='" + CASH_STAT + "', CASH_REF1 = '" + REF_PO + "' , CASH_REF3 = '" + PO_NO.trim() + "' , CASH_PAYT = '" + CASH_PAYT.trim() + "', CASH_PAYTO = '" + payto + "'\n"
                         + "WHERE CASH_CANO = '" + CASH_CANO + "'";
                 UpdateHeader = conn.prepareStatement(StrUpdateHeader);
                 UpdateHeader.executeUpdate(StrUpdateHeader);
@@ -170,10 +170,9 @@ public class ClassSetdata {
 
     public String SaveCashAdvanceAccountStep1Form( //CASH ADVANCE Account  STEP 1
             String CASH_CANO, String CASH_TRAD,
-            String CASH_CHEB, String CASH_STAT) {
+            String CASH_CHEB, String CASH_STAT, String payto) {
 
         try {
-
             PreparedStatement InsertHeader = null;
             Connection conn = ConnectionDB();
             ClassCheckDataProgram ccdp = new ClassCheckDataProgram();
@@ -181,7 +180,7 @@ public class ClassSetdata {
 
             if (CASH_STAT.equals("99")) {
                 String StrInsertHeader = "UPDATE " + Table_fin_caadd;
-                StrInsertHeader += " SET CASH_TRAD='" + CASH_TRAD + "' ,CASH_CHEB='" + CASH_CHEB + "',CASH_STAT='" + CASH_STAT + "'   ";
+                StrInsertHeader += " SET CASH_TRAD='" + CASH_TRAD + "' ,CASH_CHEB='" + CASH_CHEB + "',CASH_STAT='" + CASH_STAT + "',CASH_PAYTO='" + payto + "' ";
                 StrInsertHeader += ",CASH_CANB='" + LoginUsername + "'   WHERE CASH_CANO = '" + CASH_CANO + "' "
                         + "AND CASH_CONO = '" + LoginCono.trim() + "' AND CASH_DIVI = '" + LoginDivision.trim() + "'";
 
@@ -189,7 +188,7 @@ public class ClassSetdata {
                 InsertHeader.executeUpdate(StrInsertHeader);
             } else {
                 String StrInsertHeader = "UPDATE " + Table_fin_caadd;
-                StrInsertHeader += " SET CASH_TRAD='" + CASH_TRAD + "' ,CASH_CHEB='" + CASH_CHEB + "',CASH_STAT='" + CASH_STAT + "'  ";
+                StrInsertHeader += " SET CASH_TRAD='" + CASH_TRAD + "' ,CASH_CHEB='" + CASH_CHEB + "',CASH_STAT='" + CASH_STAT + "' ,CASH_PAYTO='" + payto + "' ";
                 StrInsertHeader += " WHERE CASH_CANO='" + CASH_CANO + "' ";
                 StrInsertHeader += " AND  CASH_CONO ='" + LoginCono.trim() + "' ";
                 StrInsertHeader += " AND  CASH_DIVI ='" + LoginDivision.trim() + "' ";
@@ -392,33 +391,90 @@ public class ClassSetdata {
                     String SETT_DESC = (String) model.getValueAt(i, 4);
                     String SETT_COST = (String) model.getValueAt(i, 5);
 
+//                    BigDecimal SETT_AMTB = new BigDecimal(0);
+//                    try {
+//                        SETT_AMTB = BigDecimal.valueOf((Double) model.getValueAt(i, 6));
+//                    } catch (Exception e) {
+//                        SETT_AMTB = new BigDecimal(0) ;
+//                    }
+//                    BigDecimal SETT_VATC = new BigDecimal(0);
+//                    try {
+//                        SETT_VATC = BigDecimal.valueOf((Double)model.getValueAt(i, 7));
+//                    } catch (Exception e) {
+//                        SETT_VATC = new BigDecimal(0) ;
+//                    }
+//                    BigDecimal SETT_VATA = new BigDecimal(0) ;
+//                    try {
+//                        SETT_VATA =BigDecimal.valueOf((Double)model.getValueAt(i, 8));
+////                                (BigDecimal) model.getValueAt(i, 8);
+//                    } catch (Exception e) {
+//                        SETT_VATA = new BigDecimal(0) ;
+//                    }
+//                    String SETT_NODES = (String) model.getValueAt(i, 9);
+//
+//                    BigDecimal SETT_AMTT = new BigDecimal(0) ;
+//                    try {
+//                        SETT_AMTT = BigDecimal.valueOf((Double)model.getValueAt(i, 10));
+////                                (BigDecimal) model.getValueAt(i, 10);
+//                    } catch (Exception e) {
+//                        SETT_AMTT = new BigDecimal(0) ;
+//                    }
+//                    
                     BigDecimal SETT_AMTB = new BigDecimal(0);
                     try {
-                        SETT_AMTB = BigDecimal.valueOf((Double) model.getValueAt(i, 6));
+                        if (model.getValueAt(i, 6) instanceof Double) {
+                            SETT_AMTB = BigDecimal.valueOf((Double) model.getValueAt(i, 6));
+//                            System.out.println("Value is a Double: " + d);
+                        } else if (model.getValueAt(i, 6) instanceof BigDecimal) {
+                            SETT_AMTB = (BigDecimal) model.getValueAt(i, 6);
+//                            System.out.println("Value is a BigDecimal: " + bd);
+                        }
+
+//                        SETT_AMTB = BigDecimal.valueOf((Double) model.getValueAt(i, 6));
                     } catch (Exception e) {
-                        SETT_AMTB = new BigDecimal(0) ;
+                        SETT_AMTB = new BigDecimal(0);
                     }
                     BigDecimal SETT_VATC = new BigDecimal(0);
                     try {
-                        SETT_VATC = BigDecimal.valueOf((Double)model.getValueAt(i, 7));
+
+                        if (model.getValueAt(i, 7) instanceof Double) {
+                            SETT_VATC = BigDecimal.valueOf((Double) model.getValueAt(i, 7));
+//                            System.out.println("Value is a Double: " + d);
+                        } else if (model.getValueAt(i, 7) instanceof BigDecimal) {
+                            SETT_VATC = (BigDecimal) model.getValueAt(i, 7);
+//                            System.out.println("Value is a BigDecimal: " + bd);
+                        }
+//                        SETT_VATC = BigDecimal.valueOf((Double) model.getValueAt(i, 7));
                     } catch (Exception e) {
-                        SETT_VATC = new BigDecimal(0) ;
+                        SETT_VATC = new BigDecimal(0);
                     }
-                    BigDecimal SETT_VATA = new BigDecimal(0) ;
+                    BigDecimal SETT_VATA = new BigDecimal(0);
                     try {
-                        SETT_VATA =BigDecimal.valueOf((Double)model.getValueAt(i, 8));
-//                                (BigDecimal) model.getValueAt(i, 8);
+                        if (model.getValueAt(i, 8) instanceof Double) {
+                            SETT_VATA = BigDecimal.valueOf((Double) model.getValueAt(i, 8));
+//                            System.out.println("Value is a Double: " + d);
+                        } else if (model.getValueAt(i, 8) instanceof BigDecimal) {
+                            SETT_VATA = (BigDecimal) model.getValueAt(i, 8);
+//                            System.out.println("Value is a BigDecimal: " + bd);
+                        }
                     } catch (Exception e) {
-                        SETT_VATA = new BigDecimal(0) ;
+                        SETT_VATA = new BigDecimal(0);
                     }
                     String SETT_NODES = (String) model.getValueAt(i, 9);
 
-                    BigDecimal SETT_AMTT = new BigDecimal(0) ;
+                    BigDecimal SETT_AMTT = new BigDecimal(0);
                     try {
-                        SETT_AMTT = BigDecimal.valueOf((Double)model.getValueAt(i, 10));
+                        if (model.getValueAt(i, 10) instanceof Double) {
+                            SETT_AMTT = BigDecimal.valueOf((Double) model.getValueAt(i, 10));
+//                            System.out.println("Value is a Double: " + d);
+                        } else if (model.getValueAt(i, 10) instanceof BigDecimal) {
+                            SETT_AMTT = (BigDecimal) model.getValueAt(i, 10);
+//                            System.out.println("Value is a BigDecimal: " + bd);
+                        }
+//                        SETT_AMTT = BigDecimal.valueOf((Double) model.getValueAt(i, 10));
 //                                (BigDecimal) model.getValueAt(i, 10);
                     } catch (Exception e) {
-                        SETT_AMTT = new BigDecimal(0) ;
+                        SETT_AMTT = new BigDecimal(0);
                     }
                     String SETT_BRAC = (String) model.getValueAt(i, 11);
                     String SETT_STAT = "10";
